@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # MongoDB database
+  database:
+    image: mongo
+    restart: always
+    volumes:
+      - ./data/db:/data/db
+
+  # REVOLT API server (Delta)
+  api:
+    image: revoltchat/server
+    env_file: .env
+    environment:
+      - REVOLT_MONGO_URI=mongodb://database
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    restart: always
+
+  # REVOLT Web App
+  web:
+    image: revoltchat/client
+    ports:
+      - "5000:5000"
+    restart: always
+
+  # S3-compatible storage server
+  minio:
+    image: minio/minio
+    command: server /data
+    env_file: .env
+    volumes:
+      - ./data:/data
+    ports:
+      - "10000:9000"
+    restart: always
+
+  # REVOLT file hosting service (Autumn)
+  autumn:
+    image: revoltchat/autumn
+    env_file: .env
+    environment:
+      - AUTUMN_MONGO_URI=mongodb://database
+    ports:
+      - "3000:3000"
+    restart: always
+
+  # REVOLT metadata and image proxy (January)
+  january:
+    image: revoltchat/january
+    ports:
+      - "7000:3000"
+    restart: always
