@@ -22,6 +22,7 @@ services:
   # REVOLT Web App
   web:
     image: revoltchat/client
+    env_file: .env
     ports:
       - "5000:5000"
     restart: always
