@@ -13,6 +13,8 @@ cp .env.example .env
 docker-compose up -d
 ```
 
+Then simply go to https://local.revolt.chat:5000
+
 ## Usage
 
 Copy the `.env` file and edit according to your needs.
