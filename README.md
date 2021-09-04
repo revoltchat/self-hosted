@@ -1,4 +1,4 @@
-This is still a work-in-progress and some things may not work, notably Autumn does not auto-create S3 buckets yet and the app points to api.revolt.chat by default.
+This is still a work-in-progress and some things may not work, notably Autumn does not auto-create S3 buckets yet.
 
 ## Quick Start
 
@@ -7,13 +7,13 @@ This repository provides reasonable defaults, so you can immediately get started
 > ⚠️ Not recommended for production, see below for full guide.
 
 ```bash
-git clone https://gitlab.insrt.uk/revolt/self-hosted revolt
+git clone https://github.com/revoltchat/self-hosted revolt
 cd revolt
 cp .env.example .env
 docker-compose up -d
 ```
 
-Then simply go to https://local.revolt.chat:5000
+Then simply go to http://local.revolt.chat:5000
 
 ## Usage
 

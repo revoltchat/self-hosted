@@ -21,7 +21,7 @@ services:
 
   # REVOLT Web App
   web:
-    image: revoltchat/client
+    image: revoltchat/client:master
     env_file: .env
     ports:
       - "5000:5000"
