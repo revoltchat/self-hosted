@@ -33,7 +33,7 @@ services:
     command: server /data
     env_file: .env
     volumes:
-      - ./data:/data
+      - ./data/minio:/data
     ports:
       - "10000:9000"
     restart: always
