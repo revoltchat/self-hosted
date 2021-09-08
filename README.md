@@ -1,4 +1,4 @@
-This is still a work-in-progress and some things may not work, notably Autumn does not auto-create S3 buckets yet.
+This is still a work-in-progress and some things may not work but for the most part everything has been tested without issue!
 
 ## Quick Start
 
