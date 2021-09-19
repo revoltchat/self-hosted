@@ -8,12 +8,21 @@ services:
     volumes:
       - ./data/db:/data/db
 
+  # Redis server
+  redis:
+    image: eqalpha/keydb
+    restart: always
+
   # REVOLT API server (Delta)
   api:
     image: revoltchat/server
     env_file: .env
+    depends_on:
+      - database
+      - redis
     environment:
       - REVOLT_MONGO_URI=mongodb://database
+      - REVOLT_REDIS_URI=redis://redis/
     ports:
       - "8000:8000"
       - "9000:9000"
@@ -60,6 +69,9 @@ services:
   autumn:
     image: revoltchat/autumn
     env_file: .env
+    depends_on:
+      - database
+      - createbuckets
     environment:
       - AUTUMN_MONGO_URI=mongodb://database
     ports:
