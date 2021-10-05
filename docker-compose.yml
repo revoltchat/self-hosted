@@ -84,3 +84,11 @@ services:
     ports:
       - "7000:3000"
     restart: always
+    
+ # Web port proxy to port 80 (nginx)
+ nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
