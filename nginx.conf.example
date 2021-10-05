@@ -1,0 +1,59 @@
+worker_processes  1;
+#Referes to single threaded process. Generally set to be equal to the number of CPUs or cores.
+
+#error_log  logs/error.log; #error_log  logs/error.log  notice;
+#Specifies the file where server logs.
+
+#pid        logs/nginx.pid;
+#nginx will write its master process ID(PID).
+
+events {
+    worker_connections  1024;
+    # worker_processes and worker_connections allows you to calculate maxclients value:
+    # max_clients = worker_processes * worker_connections
+}
+http {
+server {
+    listen 80;
+    server_name ws.replacemewith.domain;
+    location / {
+      proxy_pass http://127.0.0.1:9000;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+   }
+  upstream ws-backend {
+    # enable sticky session based on IP
+    ip_hash;
+    server 127.0.0.1:9000;
+   }
+server {
+        listen 80;
+        server_name replacemewith.domain;
+        location / {
+        proxy_pass http://127.0.0.1:5000;
+}
+}
+server {
+        listen 80;
+        server_name media.replacemewith.domain;
+        location / {
+        proxy_pass http://127.0.0.1:7000;
+}
+server {
+        listen 80;
+        server_name cdn.replacemewith.domain;
+        location / {
+        proxy_pass http://127.0.0.1:3000;
+}
+}
+
+server {
+        listen 80;
+        server_name api.replacemewith.domain;
+        location / {
+        proxy_pass http://127.0.0.1:8000;
+}
+}
+}
