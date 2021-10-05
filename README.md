@@ -17,10 +17,11 @@ Then simply go to http://local.revolt.chat:5000
 
 ## Usage
 
-Copy the `.env` file and edit according to your needs.
+Copy the `.env` and `nginx.conf` files and edit according to your needs.
 
 ```bash
 cp .env.example .env
+cp nginx.conf.example nginx.conf
 ```
 
 Then bring up REVOLT:
