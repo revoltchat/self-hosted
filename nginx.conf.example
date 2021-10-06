@@ -23,11 +23,6 @@ server {
       proxy_set_header Connection "upgrade";
     }
    }
-  upstream ws-backend {
-    # enable sticky session based on IP
-    ip_hash;
-    server 127.0.0.1:9000;
-   }
 server {
         listen 80;
         server_name replacemewith.domain;
