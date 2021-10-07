@@ -86,7 +86,7 @@ services:
     restart: always
     
  # Web port proxy to port 80 (nginx)
- nginx:
+  nginx:
     image: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
