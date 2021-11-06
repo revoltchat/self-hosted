@@ -15,7 +15,14 @@ docker-compose up -d
 
 Then simply go to http://local.revolt.chat:5000
 
-## Usage
+## Setup
+
+Clone this repository.
+
+```bash
+git clone https://github.com/revoltchat/self-hosted revolt
+cd revolt
+```
 
 Copy the `.env` file and edit according to your needs.
 
