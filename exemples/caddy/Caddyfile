@@ -1,0 +1,27 @@
+http://revolt.chat {
+	route /api/* {
+		uri strip_prefix api
+		reverse_proxy http://caddy-api-1:8000
+	}
+
+	route /autumn/* {
+		uri strip_prefix autumn
+		reverse_proxy http://caddy-autumn-1:3000
+	}
+
+	route /january/* {
+		uri strip_prefix january
+		reverse_proxy http://caddy-january-1:7000
+	}
+
+	reverse_proxy http://caddy-web-1:5000
+}
+
+http://ws.revolt.chat {
+	@websocket {
+		header Connection *Upgrade*
+		header upgrade websocket
+	}
+
+	reverse_proxy @websocket http://caddy-api-1:9000
+}
