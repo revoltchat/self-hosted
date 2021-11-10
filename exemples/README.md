@@ -2,7 +2,7 @@
 
 This section shows you one exemple for each reverse proxy.
 
-Available exemples:
+Available examples:
 - Traefik
 - Caddy
 
