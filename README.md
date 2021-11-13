@@ -1,5 +1,17 @@
 This is still a work-in-progress and some things may not work but for the most part everything has been tested without issue!
 
+## Errata Notice
+
+The CI for the API server (revoltchat/server) is currently being reworked, I was having a few issues with building both amd64/arm64.
+
+Please make sure you're using the correct image for your platform:
+- amd64: `revoltchat/server:master`
+- arm64: `revoltchat/server:latest`
+
+I hope to get this resolved soon, thank you.
+
+Related issue: https://github.com/revoltchat/delta/issues/116
+
 ## Quick Start
 
 This repository provides reasonable defaults, so you can immediately get started with it on your local machine.
