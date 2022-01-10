@@ -45,7 +45,7 @@ Copy the `.env` file and edit according to your needs.
 cp .env.example .env
 ```
 
-Then bring up REVOLT:
+Then bring up Revolt:
 
 ```bash
 docker-compose up -d
