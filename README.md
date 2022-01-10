@@ -1,14 +1,14 @@
 This is still a work-in-progress and some things may not work but for the most part everything has been tested without issue!
 
+**Note**: the Revolt team is primarily focused on other components of the app, don't expect any immediate support, some issues may also be seen as out of scope for what this repo is trying to achieve so they may be marked as WONTFIX.
+
 ## Errata Notice
 
 The CI for the API server (revoltchat/server) is currently being reworked, I was having a few issues with building both amd64/arm64.
 
 Please make sure you're using the correct image for your platform:
 - amd64: `revoltchat/server:master`
-- arm64: `revoltchat/server:latest`
-
-I hope to get this resolved soon, thank you.
+- arm64: `revoltchat/server:0.5.3-alpha.8`
 
 Related issue: https://github.com/revoltchat/delta/issues/116
 
