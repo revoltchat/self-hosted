@@ -1,0 +1,1 @@
+revolt.chat ws.revolt.chat api.revolt.chat dashboard.revolt.chat autumn.revolt.chat january.revolt.chat

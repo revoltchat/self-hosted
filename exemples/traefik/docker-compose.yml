@@ -1,0 +1,155 @@
+version: '3.8'
+
+services:
+  # Reverse proxy, Traefik
+  traefik:
+    image: traefik:v2.5
+    restart: unless-stopped
+    container_name: traefik
+    depends_on:
+      - api
+    command:
+      - "--log.level=DEBUG" # https://doc.traefik.io/traefik/observability/logs/#level
+      - "--api"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - revolt
+    # logging:
+    #   driver: none
+    labels:
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.rule=Host(`dashboard.revolt.chat`)"
+      - "traefik.enable=true"
+
+  # MongoDB server
+  database:
+    image: mongo:5
+    restart: unless-stopped
+    networks:
+      - revolt
+    volumes:
+      - revolt-production:/data/db
+
+  # Redis server
+  redis:
+    image: eqalpha/keydb
+    restart: unless-stopped
+    networks:
+      - revolt
+
+  # REVOLT API server (Delta)
+  api:
+    image: revoltchat/server:master
+    restart: unless-stopped
+    depends_on:
+      - database
+      - redis
+    networks:
+      - revolt
+    env_file: .env
+    environment:
+      - REVOLT_MONGO_URI=mongodb://database
+      - REVOLT_REDIS_URI=redis://redis/
+    labels:
+      - "traefik.http.services.revolt-api.loadbalancer.server.port=8000"
+      - "traefik.http.routers.revolt-api.service=revolt-api"
+      - "traefik.http.routers.revolt-api.rule=Host(`revolt.chat`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.revolt-api.middlewares=revolt-api-stripprefixregex@docker"
+      - "traefik.http.middlewares.revolt-api-stripprefixregex.stripprefixregex.regex=/api"
+
+      - "traefik.http.services.revolt-ws.loadbalancer.server.port=9000"
+      - "traefik.http.routers.revolt-ws.service=revolt-ws"
+      - "traefik.http.routers.revolt-ws.rule=Host(`ws.revolt.chat`)"
+
+      - "traefik.enable=true"
+
+  # REVOLT Web App
+  web:
+    image: revoltchat/client:master
+    restart: unless-stopped
+    networks:
+      - revolt
+    env_file: .env
+    labels:
+      - "traefik.http.services.revolt-web.loadbalancer.server.port=5000"
+      - "traefik.http.routers.revolt-web.rule=Host(`revolt.chat`) && !(PathPrefix(`/api`) || PathPrefix(`/autumn`) || PathPrefix(`/january`))"
+      - "traefik.enable=true"
+
+  # S3-compatible storage server
+  minio:
+    image: minio/minio:RELEASE.2021-11-03T03-36-36Z
+    restart: unless-stopped
+    networks:
+      - revolt
+    volumes:
+      - minio-production:/data
+    env_file: .env
+    command: server /data
+
+  # Create buckets for minio.
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    networks:
+      - revolt
+    env_file: .env
+    entrypoint: >
+      /bin/sh -c "
+      while ! curl -s --output /dev/null --connect-timeout 1 http://minio:9000; do echo 'Waiting minio...' && sleep 0.1; done;
+      /usr/bin/mc alias set minio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD;
+      /usr/bin/mc mb minio/attachments;
+      /usr/bin/mc mb minio/avatars;
+      /usr/bin/mc mb minio/backgrounds;
+      /usr/bin/mc mb minio/icons;
+      /usr/bin/mc mb minio/banners;
+      exit 0;
+      "
+
+  # REVOLT file hosting service (Autumn)
+  autumn:
+    image: revoltchat/autumn:master
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - database
+      - createbuckets
+    networks:
+      - revolt
+    environment:
+      - AUTUMN_MONGO_URI=mongodb://database
+    restart: always
+    labels:
+      - "traefik.http.services.revolt-autumn.loadbalancer.server.port=3000"
+      - "traefik.http.routers.revolt-autumn.rule=Host(`revolt.chat`) && PathPrefix(`/autumn`)"
+      - "traefik.http.routers.revolt-autumn.middlewares=revolt-autumn-stripprefixregex@docker"
+      - "traefik.http.middlewares.revolt-autumn-stripprefixregex.stripprefixregex.regex=/autumn"
+      - "traefik.enable=true"
+
+  # REVOLT metadata and image proxy (January)
+  january:
+    image: revoltchat/january:master
+    restart: unless-stopped
+    networks:
+      - revolt
+    labels:
+      - "traefik.http.services.revolt-january.loadbalancer.server.port=3000"
+      - "traefik.http.routers.revolt-january.rule=Host(`revolt.chat`) && PathPrefix(`/january`)"
+      - "traefik.http.routers.revolt-january.middlewares=revolt-january-stripprefixregex@docker"
+      - "traefik.http.middlewares.revolt-january-stripprefixregex.stripprefixregex.regex=/january"
+      - "traefik.enable=true"
+
+networks:
+  revolt:
+
+volumes:
+  revolt-production:
+  minio-production:
