@@ -36,13 +36,14 @@ git clone https://github.com/revoltchat/self-hosted revolt
 cd revolt
 ```
 
-Copy the `.env` file and edit according to your needs.
+Copy the `.env` and `nginx.conf` files and edit according to your needs.
 
 > ⚠️ The default configuration is intended for testing and only works on your local machine. If you want to deploy to a remote server, you need to edit the URLs in the `.env` file. \
 > If you get a network error when trying to log in, **double check your configuration before opening an issue.**
 
 ```bash
 cp .env.example .env
+cp nginx.conf.example nginx.conf
 ```
 
 Then bring up Revolt:
