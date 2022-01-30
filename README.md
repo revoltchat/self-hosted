@@ -25,7 +25,7 @@ cp .env.example .env
 docker-compose up -d
 ```
 
-Then simply go to http://local.revolt.chat:5000
+Then simply go to http://local.revolt.chat:5001
 
 ## Setup
 
