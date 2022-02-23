@@ -15,7 +15,7 @@ services:
 
   # REVOLT API server (Delta)
   api:
-    image: revoltchat/server
+    image: ghcr.io/redstonewizard08/delta:patch-1
     env_file: .env
     depends_on:
       - database
