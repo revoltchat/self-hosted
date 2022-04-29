@@ -15,7 +15,7 @@ services:
 
   # API server (delta)
   api:
-    image: ghcr.io/revoltchat/server:0.5.3-rc.1
+    image: ghcr.io/revoltchat/server:0.5.3-rc.4
     env_file: .env
     depends_on:
       - database
