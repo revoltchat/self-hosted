@@ -51,6 +51,17 @@ Then bring up Revolt:
 docker-compose up -d
 ```
 
+## Expose Database
+
+You can insecurely expose the database by creating `docker-compose.override.yml` with the content:
+
+```yml
+services:
+  database:
+    ports:
+      - "27017:27017"
+```
+
 ## To-Do
 
 - Interactive setup.
