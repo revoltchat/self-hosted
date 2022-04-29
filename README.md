@@ -51,19 +51,27 @@ Then bring up Revolt:
 docker-compose up -d
 ```
 
-## Expose Database
+## Additional Notes
 
-You can insecurely expose the database by creating `docker-compose.override.yml` with the content:
+### Expose database
+
+You can insecurely expose the database by adding a port definition:
 
 ```yml
+# docker-compose.override.yml
 services:
   database:
     ports:
       - "27017:27017"
 ```
 
-## To-Do
+### Mongo compatibility
 
-- Interactive setup.
-- Add Caddy.
-- Add voso.
+Older processors may not support the latest MongoDB version, you may pin to MongoDB 4.4 as such:
+
+```yml
+# docker-compose.override.yml
+services:
+  database:
+    image: mongo:4.4
+```
