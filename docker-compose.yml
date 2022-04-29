@@ -89,5 +89,5 @@ services:
   january:
     image: ghcr.io/revoltchat/january:master
     ports:
-      - "7000:3000"
+      - "7000:7000"
     restart: always
