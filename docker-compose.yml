@@ -13,24 +13,31 @@ services:
     image: eqalpha/keydb
     restart: always
 
-  # REVOLT API server (Delta)
+  # API server (delta)
   api:
-    image: revoltchat/server
+    image: ghcr.io/revoltchat/server:0.5.3-rc.1
     env_file: .env
     depends_on:
       - database
       - redis
-    environment:
-      - REVOLT_MONGO_URI=mongodb://database
-      - REVOLT_REDIS_URI=redis://redis/
     ports:
       - "8000:8000"
+    restart: always
+  
+  # Events service (quark)
+  events:
+    image: ghcr.io/revoltchat/bonfire:0.1.0
+    env_file: .env
+    depends_on:
+      - database
+      - redis
+    ports:
       - "9000:9000"
     restart: always
 
-  # REVOLT Web App
+  # Web App (revite)
   web:
-    image: revoltchat/client:master
+    image: ghcr.io/revoltchat/client:master
     env_file: .env
     ports:
       - "5000:5000"
@@ -65,9 +72,9 @@ services:
       exit 0;
       "
 
-  # REVOLT file hosting service (Autumn)
+  # File server (autumn)
   autumn:
-    image: revoltchat/autumn
+    image: ghcr.io/revoltchat/autumn:master
     env_file: .env
     depends_on:
       - database
@@ -78,9 +85,9 @@ services:
       - "3000:3000"
     restart: always
 
-  # REVOLT metadata and image proxy (January)
+  # Metadata and image proxy (january)
   january:
-    image: revoltchat/january
+    image: ghcr.io/revoltchat/january:master
     ports:
       - "7000:3000"
     restart: always
