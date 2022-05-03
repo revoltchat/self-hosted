@@ -26,7 +26,7 @@ services:
   
   # Events service (quark)
   events:
-    image: ghcr.io/revoltchat/bonfire:0.1.0
+    image: ghcr.io/revoltchat/bonfire:0.1.1
     env_file: .env
     depends_on:
       - database
