@@ -74,7 +74,7 @@ services:
 
   # File server (autumn)
   autumn:
-    image: ghcr.io/revoltchat/autumn:master
+    image: ghcr.io/revoltchat/autumn:1.1.4
     env_file: .env
     depends_on:
       - database
