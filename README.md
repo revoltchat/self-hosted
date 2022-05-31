@@ -1,6 +1,10 @@
+# Before you get started
+
 This is still a work-in-progress and some things may not work but for the most part everything has been tested without issue!
 
 **Note**: the Revolt team is primarily focused on other components of the app, don't expect any immediate support, some issues may also be seen as out of scope for what this repo is trying to achieve so they may be marked as WONTFIX.
+
+Please [read the FAQ before running your own server](https://developers.revolt.chat/faq/usage#guidelines-for-third-party-instances) and you may want to read about [additional notes relating to third-party instances](https://developers.revolt.chat/faq/instances).
 
 ## Errata Notice
 
