@@ -55,6 +55,26 @@ Then bring up Revolt:
 docker-compose up -d
 ```
 
+## Updating Revolt
+
+To update Revolt, first pull the latest copy of this repository to ensure you have the latest tags:
+
+```
+git pull
+```
+
+Then pull all the latest images:
+
+```
+docker-compose pull
+```
+
+Now you can restart your services:
+
+```
+docker-compose up -d
+```
+
 ## Additional Notes
 
 ### Expose database
