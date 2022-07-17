@@ -15,7 +15,7 @@ services:
 
   # API server (delta)
   api:
-    image: ghcr.io/revoltchat/server:20220621-1
+    image: ghcr.io/revoltchat/server:20220715-1
     env_file: .env
     depends_on:
       - database
@@ -26,7 +26,7 @@ services:
   
   # Events service (quark)
   events:
-    image: ghcr.io/revoltchat/bonfire:20220621-1
+    image: ghcr.io/revoltchat/bonfire:20220715-1
     env_file: .env
     depends_on:
       - database
@@ -37,7 +37,7 @@ services:
 
   # Web App (revite)
   web:
-    image: ghcr.io/revoltchat/client:1.0.1
+    image: ghcr.io/revoltchat/client:master
     env_file: .env
     ports:
       - "5000:5000"
