@@ -69,12 +69,13 @@ services:
       /usr/bin/mc mb minio/backgrounds;
       /usr/bin/mc mb minio/icons;
       /usr/bin/mc mb minio/banners;
+      /usr/bin/mc mb minio/emojis;
       exit 0;
       "
 
   # File server (autumn)
   autumn:
-    image: ghcr.io/revoltchat/autumn:1.1.4
+    image: ghcr.io/revoltchat/autumn:1.1.5
     env_file: .env
     depends_on:
       - database
