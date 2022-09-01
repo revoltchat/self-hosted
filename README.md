@@ -9,12 +9,13 @@ Please [read the FAQ before running your own server](https://developers.revolt.c
 ## Errata Notice
 
 The CI for the API server (revoltchat/server) is currently being reworked, I was having a few issues with building both amd64/arm64.
-
-Please make sure you're using the correct image for your platform:
-- amd64: `revoltchat/server:master`
-- arm64: `revoltchat/server:0.5.3-alpha.8`
-
 Related issue: https://github.com/revoltchat/delta/issues/116
+
+## Quick Start for arm64 users
+To run Revolt on self hosted instances with a arm64 proccessor. You will need to use an emulator for docker. 
+Here are the installation steps:
+``` docker run --privileged --rm tonistiigi/binfmt --install amd64 ```
+Once that's done just follow the instructions below.
 
 ## Quick Start
 
