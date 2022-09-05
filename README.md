@@ -8,11 +8,7 @@ Please [read the FAQ before running your own server](https://developers.revolt.c
 
 ## Errata Notice
 
-The CI for the API server (revoltchat/server) is currently being reworked, I was having a few issues with building both amd64/arm64.
-
-Please make sure you're using the correct image for your platform:
-- amd64: `revoltchat/server:master`
-- arm64: `revoltchat/server:0.5.3-alpha.8`
+amd64 builds are currently unavailable.
 
 Related issue: https://github.com/revoltchat/delta/issues/116
 
