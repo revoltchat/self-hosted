@@ -95,3 +95,14 @@ services:
   database:
     image: mongo:4.4
 ```
+
+### Making your instance invite-only
+
+Enable invite-only mode by setting `REVOLT_INVITE_ONLY` in `.env` to `1`
+
+Create an invite (Replace "YOUR INVITE HERE" with what you want the invite code to be)
+```bash
+docker-compose exec database mongosh
+use revolt
+db.invites.insertOne({ _id: "YOUR INVITE HERE" })
+```
