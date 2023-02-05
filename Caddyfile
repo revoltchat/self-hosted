@@ -1,4 +1,4 @@
-{$REVOLT_APP_URL} {
+{$HOSTNAME} {
 	route /api* {
 		uri strip_prefix /api
 		reverse_proxy http://api:8000

@@ -95,6 +95,31 @@ You will also want to change the protocols to enable HTTPS:
 + REVOLT_EXTERNAL_WS_URL=wss://my.domain/ws
 ```
 
+### Putting Revolt behind another reverse proxy (or on a non-standard port)
+
+Override the port definitions on `caddy`:
+
+```yml
+# docker-compose.yml
+services:
+  caddy:
+    ports:
+      - "1234:80"
+```
+
+> **Warning**
+> This file is not Git ignored, it may be sufficient to use an override file but that will not remove port 80 / 443 allocations.
+
+Update the hostname used by the web server:
+
+```diff
+# .env
+- HOSTNAME=http://local.revolt.chat
++ HOSTNAME=:80
+```
+
+You can now reverse proxy to http://localhost:1234.
+
 ### Expose database
 
 You can insecurely expose the database by adding a port definition:
