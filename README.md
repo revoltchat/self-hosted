@@ -1,16 +1,10 @@
 # Before you get started
 
-This is still a work-in-progress and some things may not work but for the most part everything has been tested without issue!
-
-**Note**: the Revolt team is primarily focused on other components of the app, don't expect any immediate support, some issues may also be seen as out of scope for what this repo is trying to achieve so they may be marked as WONTFIX.
-
 Please [read the FAQ before running your own server](https://developers.revolt.chat/faq/usage#guidelines-for-third-party-instances) and you may want to read about [additional notes relating to third-party instances](https://developers.revolt.chat/faq/instances).
 
 ## Errata Notice
 
-amd64 builds are currently unavailable.
-
-Related issue: https://github.com/revoltchat/delta/issues/116
+amd64 builds are currently unavailable ([#116](https://github.com/revoltchat/delta/issues/116)).
 
 ## Quick Start
 
@@ -26,9 +20,15 @@ cp .env.example .env
 docker-compose up -d
 ```
 
-Then simply go to http://local.revolt.chat:5000
+Then simply go to http://local.revolt.chat
 
-## Setup
+# Setup
+
+Prerequisites before continuing:
+
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [Git](https://git-scm.com/)
 
 Clone this repository.
 
@@ -39,7 +39,7 @@ cd revolt
 
 Copy the `.env` file and edit according to your needs.
 
-> **Warning**: The default configuration is intended for testing and only works on your local machine. If you want to deploy to a remote server, you need to edit the URLs in the `.env` file. \
+> **Warning**: The default configuration is intended for testing and only works on your local machine. If you want to deploy to a remote server, you need to edit the URLs in the `.env` file, please see the section below on [configuring a custom domain](#custom-domain). \
 > If you get a network error when trying to log in, **double check your configuration before opening an issue.**
 
 ```bash
@@ -56,23 +56,44 @@ docker-compose up -d
 
 To update Revolt, first pull the latest copy of this repository to ensure you have the latest tags:
 
-```
+```bash
 git pull
 ```
 
 Then pull all the latest images:
 
-```
+```bash
 docker-compose pull
 ```
 
 Now you can restart your services:
 
-```
+```bash
 docker-compose up -d
 ```
 
 ## Additional Notes
+
+### Custom domain
+
+To configure a custom domain, you should be able to do a search and replace on `local.revolt.chat` in the `.env` file, like so:
+
+```diff
+# .env
+- REVOLT_APP_URL=http://local.revolt.chat
++ REVOLT_APP_URL=http://my.domain
+```
+
+You will also want to change the protocols to enable HTTPS:
+
+```diff
+# .env
+- REVOLT_APP_URL=http://my.domain
++ REVOLT_APP_URL=https://my.domain
+
+- REVOLT_EXTERNAL_WS_URL=ws://my.domain/ws
++ REVOLT_EXTERNAL_WS_URL=wss://my.domain/ws
+```
 
 ### Expose database
 
@@ -101,9 +122,13 @@ services:
 
 Enable invite-only mode by setting `REVOLT_INVITE_ONLY` in `.env` to `1`
 
-Create an invite (Replace "YOUR INVITE HERE" with what you want the invite code to be)
+Create an invite:
+
 ```bash
+# drop into mongo shell
 docker-compose exec database mongosh
+
+# create the invite
 use revolt
-db.invites.insertOne({ _id: "YOUR INVITE HERE" })
+db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 ```
