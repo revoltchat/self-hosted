@@ -4,7 +4,11 @@ Please [read the FAQ before running your own server](https://developers.revolt.c
 
 ## Errata Notice
 
-amd64 builds are currently unavailable ([#116](https://github.com/revoltchat/delta/issues/116)).
+- amd64 builds are currently unavailable ([#116](https://github.com/revoltchat/delta/issues/116)).
+- ❗ **Important**: if you deployed Revolt before [2022-10-29](https://github.com/minio/docs/issues/624#issuecomment-1296608406), you may have to tag the `minio` image release if it's configured in "fs" mode.
+  ```yml
+  image: minio/minio:RELEASE.2022-10-24T18-35-07Z
+  ```
 
 ## Quick Start
 
