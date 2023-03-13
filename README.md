@@ -58,6 +58,8 @@ docker-compose up -d
 
 ## Updating Revolt
 
+Before updating Revolt, check the errata at the top for important information and check if there are any new required environment variables now present in the `.env` file.
+
 To update Revolt, first pull the latest copy of this repository to ensure you have the latest tags:
 
 ```bash
