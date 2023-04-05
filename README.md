@@ -101,6 +101,14 @@ You will also want to change the protocols to enable HTTPS:
 + REVOLT_EXTERNAL_WS_URL=wss://my.domain/ws
 ```
 
+In the case of `HOSTNAME`, you must strip the protocol prefix:
+
+```diff
+# .env
+- HOSTNAME=https://my.domain
++ HOSTNAME=my.domain
+```
+
 ### Putting Revolt behind another reverse proxy (or on a non-standard port)
 
 Override the port definitions on `caddy`:
