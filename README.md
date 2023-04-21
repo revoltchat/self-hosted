@@ -4,10 +4,20 @@ Please [read the FAQ before running your own server](https://developers.revolt.c
 
 ## Errata Notice
 
-- amd64 builds are currently unavailable ([#116](https://github.com/revoltchat/delta/issues/116)).
+- amd64 builds are only available for `backend` and `bonfire` images currently, more to come.
 - ❗ **Important**: if you deployed Revolt before [2022-10-29](https://github.com/minio/docs/issues/624#issuecomment-1296608406), you may have to tag the `minio` image release if it's configured in "fs" mode.
   ```yml
   image: minio/minio:RELEASE.2022-10-24T18-35-07Z
+  ```
+- ❗ **Important**: if you deployed Revolt before [2023-04-21](https://github.com/revoltchat/backend/commit/32542a822e3de0fc8cc7b29af46c54a9284ee2de), you may have to flush your Redis database.
+  ```bash
+  # for stock Redis and older KeyDB images:
+  docker-compose exec redis redis-cli
+  # ...or for newer KeyDB images:
+  docker-compose exec redis keydb-cli
+  
+  # then run:
+  FLUSHDB
   ```
 
 ## Quick Start
