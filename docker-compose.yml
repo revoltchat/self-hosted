@@ -37,7 +37,7 @@ services:
 
   # API server (delta)
   api:
-    image: ghcr.io/revoltchat/server:20230421-1
+    image: ghcr.io/revoltchat/server:20230421-3
     env_file: .env
     depends_on:
       - database
@@ -47,7 +47,7 @@ services:
 
   # Events service (quark)
   events:
-    image: ghcr.io/revoltchat/bonfire:20230421-1
+    image: ghcr.io/revoltchat/bonfire:20230421-3
     env_file: .env
     depends_on:
       - database
