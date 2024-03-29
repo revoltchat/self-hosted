@@ -37,7 +37,7 @@ services:
 
   # API server (delta)
   api:
-    image: ghcr.io/revoltchat/server:20230704-1
+    image: ghcr.io/revoltchat/server:latest
     env_file: .env
     depends_on:
       - database
@@ -47,7 +47,7 @@ services:
 
   # Events service (quark)
   events:
-    image: ghcr.io/revoltchat/bonfire:20230704-1
+    image: ghcr.io/revoltchat/bonfire:latest
     env_file: .env
     depends_on:
       - database
@@ -65,7 +65,7 @@ services:
 
   # File server (autumn)
   autumn:
-    image: ghcr.io/revoltchat/autumn:1.1.10
+    image: ghcr.io/revoltchat/autumn:latest
     env_file: .env
     depends_on:
       - database
@@ -77,7 +77,7 @@ services:
 
   # Metadata and image proxy (january)
   january:
-    image: ghcr.io/revoltchat/january:master
+    image: ghcr.io/revoltchat/january:latest
     depends_on:
       - caddy
     restart: always
