@@ -19,6 +19,9 @@ Please [read the FAQ before running your own server](https://developers.revolt.c
   # then run:
   FLUSHDB
   ```
+- ❗ **Important**: configuration strategy has changed but this guide is out of date
+  TL;DR mount [Revolt.toml](https://github.com/revoltchat/backend/blob/main/crates/core/config/Revolt.toml) at /Revolt.toml for both api and events.
+  Proper documentation will follow in due time.
 
 ## Quick Start
 
