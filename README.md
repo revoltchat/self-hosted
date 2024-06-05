@@ -1,6 +1,6 @@
 # Before you get started
 
-Please [read the FAQ before running your own server](https://developers.revolt.chat/faq/usage#guidelines-for-third-party-instances) and you may want to read about [additional notes relating to third-party instances](https://developers.revolt.chat/faq/instances).
+Please read "[What can I do with Revolt and how do I self-host?](https://developers.revolt.chat/faq.html#admonition-what-can-i-do-with-revolt-and-how-do-i-self-host)" (information about licensing and brand use) on our developer site.
 
 ## Errata Notice
 
