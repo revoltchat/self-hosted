@@ -78,7 +78,7 @@ Copy `.env` and download `Revolt.toml`, then modify them according to your requi
 
 ```bash
 cp .env.example .env
-wget https://raw.githubusercontent.com/revoltchat/backend/main/crates/core/config/Revolt.toml
+wget -O Revolt.toml https://raw.githubusercontent.com/revoltchat/backend/main/crates/core/config/Revolt.toml
 ```
 
 Then start Revolt:
