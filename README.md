@@ -1,51 +1,68 @@
-# Before you get started
-
-Please read "[What can I do with Revolt and how do I self-host?](https://developers.revolt.chat/faq.html#admonition-what-can-i-do-with-revolt-and-how-do-i-self-host)" (information about licensing and brand use) on our developer site.
-
-## Errata Notice
-
-- amd64 builds are only available for `backend` and `bonfire` images currently, more to come.
-- ❗ **Important**: if you deployed Revolt before [2022-10-29](https://github.com/minio/docs/issues/624#issuecomment-1296608406), you may have to tag the `minio` image release if it's configured in "fs" mode.
-  ```yml
-  image: minio/minio:RELEASE.2022-10-24T18-35-07Z
-  ```
-- ❗ **Important**: if you deployed Revolt before [2023-04-21](https://github.com/revoltchat/backend/commit/32542a822e3de0fc8cc7b29af46c54a9284ee2de), you may have to flush your Redis database.
-  ```bash
-  # for stock Redis and older KeyDB images:
-  docker-compose exec redis redis-cli
-  # ...or for newer KeyDB images:
-  docker-compose exec redis keydb-cli
+<div align="center">
+<h1>
+  Revolt Self-Hosted
   
-  # then run:
-  FLUSHDB
-  ```
-- ❗ **Important**: configuration strategy has changed but this guide is out of date
-  TL;DR mount [Revolt.toml](https://github.com/revoltchat/backend/blob/main/crates/core/config/Revolt.toml) at /Revolt.toml for both api and events.
-  Proper documentation will follow in due time.
+  [![Stars](https://img.shields.io/github/stars/revoltchat/self-hosted?style=flat-square&logoColor=white)](https://github.com/revoltchat/self-hosted/stargazers)
+  [![Forks](https://img.shields.io/github/forks/revoltchat/self-hosted?style=flat-square&logoColor=white)](https://github.com/revoltchat/self-hosted/network/members)
+  [![Pull Requests](https://img.shields.io/github/issues-pr/revoltchat/self-hosted?style=flat-square&logoColor=white)](https://github.com/revoltchat/self-hosted/pulls)
+  [![Issues](https://img.shields.io/github/issues/revoltchat/self-hosted?style=flat-square&logoColor=white)](https://github.com/revoltchat/self-hosted/issues)
+  [![Contributors](https://img.shields.io/github/contributors/revoltchat/self-hosted?style=flat-square&logoColor=white)](https://github.com/revoltchat/self-hosted/graphs/contributors)
+  [![License](https://img.shields.io/github/license/revoltchat/self-hosted?style=flat-square&logoColor=white)](https://github.com/revoltchat/self-hosted/blob/main/LICENSE)
+</h1>
+Self-hosting Revolt using Docker
+</div>
+<br/>
+
+This repository contains configurations and instructions that can be used for deploying Revolt.
+
+> [!NOTE]
+> Please consult _[What can I do with Revolt and how do I self-host?](https://developers.revolt.chat/faq.html#admonition-what-can-i-do-with-revolt-and-how-do-i-self-host)_ on our developer site for information about licensing and brand use.
+
+> [!NOTE]
+> amd64 builds are only available for `backend` and `bonfire` images currently, more to come.
+
+> [!IMPORTANT]
+> If you deployed Revolt before [2022-10-29](https://github.com/minio/docs/issues/624#issuecomment-1296608406), you may have to tag the `minio` image release if it's configured in "fs" mode.
+>
+> ```yml
+> image: minio/minio:RELEASE.2022-10-24T18-35-07Z
+> ```
+
+> [!IMPORTANT]
+> If you deployed Revolt before [2023-04-21](https://github.com/revoltchat/backend/commit/32542a822e3de0fc8cc7b29af46c54a9284ee2de), you may have to flush your Redis database.
+>
+> ```bash
+> # for stock Redis and older KeyDB images:
+> docker compose exec redis redis-cli
+> # ...or for newer KeyDB images:
+> docker compose exec redis keydb-cli
+>
+> # then run:
+> FLUSHDB
+> ```
 
 ## Quick Start
 
 This repository provides reasonable defaults, so you can immediately get started with it on your local machine.
 
-> **Warning**
-> This is not recommended for production usage - see below for the full guide.
+> [!WARNING]
+> This is not fit for production usage; see below for the full guide.
 
 ```bash
 git clone https://github.com/revoltchat/self-hosted revolt
 cd revolt
 cp .env.example .env
-docker-compose up -d
+docker compose up
 ```
 
-Then simply go to http://local.revolt.chat
+Now navigate to http://local.revolt.chat in your browser.
 
-# Setup
+## Production Setup
 
 Prerequisites before continuing:
 
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
-- [Git](https://git-scm.com/)
+- [Git](https://git-scm.com)
+- [Docker](https://www.docker.com)
 
 Clone this repository.
 
@@ -54,26 +71,27 @@ git clone https://github.com/revoltchat/self-hosted revolt
 cd revolt
 ```
 
-Copy the `.env` file and edit according to your needs.
+Copy `.env` and download `Revolt.toml`, then modify them according to your requirements.
 
-> **Warning**: The default configuration is intended for testing and only works on your local machine. If you want to deploy to a remote server, you need to edit the URLs in the `.env` file, please see the section below on [configuring a custom domain](#custom-domain). \
-> If you get a network error when trying to log in, **double check your configuration before opening an issue.**
+> [!WARNING]
+> The default configurations are intended exclusively for testing and will only work locally. If you wish to deploy to a remote server, you **must** edit the URLs in `.env` and `Revolt.toml`. Please reference the section below on [configuring a custom domain](#custom-domain).
 
 ```bash
 cp .env.example .env
+wget -O Revolt.toml https://raw.githubusercontent.com/revoltchat/backend/main/crates/core/config/Revolt.toml
 ```
 
-Then bring up Revolt:
+Then start Revolt:
 
 ```bash
-docker-compose up -d
+docker compose up
 ```
 
-## Updating Revolt
+## Updating
 
-Before updating Revolt, check the errata at the top for important information and check if there are any new required environment variables now present in the `.env` file.
+Before updating, ensure you consult the notices at the top of this README to check if there are any important changes to be aware of.
 
-To update Revolt, first pull the latest copy of this repository to ensure you have the latest tags:
+Pull the latest version of this repository:
 
 ```bash
 git pull
@@ -82,25 +100,31 @@ git pull
 Then pull all the latest images:
 
 ```bash
-docker-compose pull
+docker compose pull
 ```
 
-Now you can restart your services:
+Then restart the services:
 
 ```bash
-docker-compose up -d
+docker compose up
 ```
 
 ## Additional Notes
 
 ### Custom domain
 
-To configure a custom domain, you should be able to do a search and replace on `local.revolt.chat` in the `.env` file, like so:
+To configure a custom domain, you will need to replace all instances of `local.revolt.chat` in the `Revolt.toml` and `.env` files, like so:
 
 ```diff
 # .env
 - REVOLT_APP_URL=http://local.revolt.chat
 + REVOLT_APP_URL=http://my.domain
+```
+
+```diff
+# Revolt.toml
+- app = "http://local.revolt.chat"
++ app = "http://my.domain"
 ```
 
 You will also want to change the protocols to enable HTTPS:
@@ -112,6 +136,15 @@ You will also want to change the protocols to enable HTTPS:
 
 - REVOLT_EXTERNAL_WS_URL=ws://my.domain/ws
 + REVOLT_EXTERNAL_WS_URL=wss://my.domain/ws
+```
+
+```diff
+# Revolt.toml
+- app = "http://local.revolt.chat"
++ app = "https://my.domain"
+
+- events = "ws://my.domain/ws"
++ events = "wss://my.domain/ws"
 ```
 
 In the case of `HOSTNAME`, you must strip the protocol prefix:
@@ -127,15 +160,15 @@ In the case of `HOSTNAME`, you must strip the protocol prefix:
 Override the port definitions on `caddy`:
 
 ```yml
-# docker-compose.yml
+# compose.yml
 services:
   caddy:
     ports:
       - "1234:80"
 ```
 
-> **Warning**
-> This file is not Git ignored, it may be sufficient to use an override file but that will not remove port 80 / 443 allocations.
+> [!WARNING]
+> This file is not Git ignored. It may be sufficient to use an override file, but that will not remove port 80 / 443 allocations.
 
 Update the hostname used by the web server:
 
@@ -147,12 +180,12 @@ Update the hostname used by the web server:
 
 You can now reverse proxy to http://localhost:1234.
 
-### Expose database
+### Insecurely expose database
 
 You can insecurely expose the database by adding a port definition:
 
 ```yml
-# docker-compose.override.yml
+# compose.override.yml
 services:
   database:
     ports:
@@ -164,7 +197,7 @@ services:
 Older processors may not support the latest MongoDB version, you may pin to MongoDB 4.4 as such:
 
 ```yml
-# docker-compose.override.yml
+# compose.override.yml
 services:
   database:
     image: mongo:4.4
@@ -172,13 +205,13 @@ services:
 
 ### Making your instance invite-only
 
-Enable invite-only mode by setting `REVOLT_INVITE_ONLY` in `.env` to `1`
+Enable invite-only mode by setting `REVOLT_INVITE_ONLY` in `.env` to `1` and `invite_only` in `Revolt.toml` to `true`.
 
 Create an invite:
 
 ```bash
 # drop into mongo shell
-docker-compose exec database mongosh
+docker compose exec database mongosh
 
 # create the invite
 use revolt

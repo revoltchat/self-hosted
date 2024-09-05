@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # MongoDB database
   database:
@@ -43,6 +41,8 @@ services:
       - database
       - redis
       - caddy
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
     restart: always
 
   # Events service (quark)
@@ -53,6 +53,8 @@ services:
       - database
       - redis
       - caddy
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
     restart: always
 
   # Web App (revite)

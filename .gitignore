@@ -1,5 +1,6 @@
 data*
 
 .env
+Revolt.toml
 
-docker-compose.override.yml
+compose.override.yml
