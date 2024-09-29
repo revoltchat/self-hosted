@@ -1,7 +1,7 @@
 {$HOSTNAME} {
 	route /api* {
 		uri strip_prefix /api
-		reverse_proxy http://api:8000
+		reverse_proxy http://api:14702
 	}
 
 	route /ws {
@@ -16,7 +16,7 @@
 
 	route /autumn* {
 		uri strip_prefix /autumn
-		reverse_proxy http://autumn:3000
+		reverse_proxy http://autumn:14704
 	}
 
 	route /january* {
