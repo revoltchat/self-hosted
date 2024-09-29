@@ -67,7 +67,7 @@ services:
 
   # File server (autumn)
   autumn:
-    image: ghcr.io/revoltchat/autumn:latest
+    image: ghcr.io/revoltchat/autumn:1.1.11
     env_file: .env
     depends_on:
       - database
@@ -79,7 +79,7 @@ services:
 
   # Metadata and image proxy (january)
   january:
-    image: ghcr.io/revoltchat/january:latest
+    image: ghcr.io/revoltchat/january:0.3.5
     depends_on:
       - caddy
     restart: always
