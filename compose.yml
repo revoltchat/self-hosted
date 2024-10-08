@@ -42,7 +42,10 @@ services:
       - redis
       - caddy
     volumes:
-      - ./Revolt.toml:/Revolt.toml
+      - type: bind
+        source: ./Revolt.toml
+        target: /Revolt.toml
+
     restart: always
 
   # Events service (quark)
@@ -54,7 +57,9 @@ services:
       - redis
       - caddy
     volumes:
-      - ./Revolt.toml:/Revolt.toml
+      - type: bind
+        source: ./Revolt.toml
+        target: /Revolt.toml
     restart: always
 
   # Web App (revite)
