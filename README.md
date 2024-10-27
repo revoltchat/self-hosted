@@ -21,23 +21,10 @@ This repository contains configurations and instructions that can be used for de
 > [!NOTE]
 > amd64 builds are only available for `backend` and `bonfire` images currently, more to come.
 
-## Quick Start
+## Quick Start (for advanced users)
 
-This repository provides reasonable defaults, so you can immediately get started with it on your local machine.
-
-> [!WARNING]
-> This is not fit for production usage; see below for the full guide.
-
-```bash
-git clone https://github.com/revoltchat/self-hosted revolt
-cd revolt
-cp .env.example .env
-docker compose up
-```
-
-Now navigate to http://local.revolt.chat in your browser.
-
-## Production Setup
+> [!IMPORTANT]
+> This guide is intended for system administrators that wish to know the bare minimum to deploy, please go to the [Deployment section](#deployment) for detailed instructions!
 
 Prerequisites before continuing:
 
@@ -57,25 +44,130 @@ Copy `.env` and download `Revolt.toml`, then modify them according to your requi
 > The default configurations are intended exclusively for testing and will only work locally. If you wish to deploy to a remote server, you **must** edit the URLs in `.env` and `Revolt.toml`. Please reference the section below on [configuring a custom domain](#custom-domain).
 
 ```bash
-cp .env.example .env
+echo "HOSTNAME=http://local.revolt.chat" > .env.web
 wget -O Revolt.toml https://raw.githubusercontent.com/revoltchat/backend/main/crates/core/config/Revolt.toml
 ```
 
 Then start Revolt:
 
 ```bash
-docker compose up
+docker compose up -d
+```
+
+## Deployment
+
+To get started, find yourself a suitable server to deploy onto, we recommend starting with at least 2 vCPUs and 2 GB of memory.
+
+<!-- TODO: promo -->
+
+<!-- select location -->
+<!-- select ubuntu -->
+
+When asked, choose **Ubuntu Server** as your operating system, this is used by us in production and we recommend its use.
+
+<!-- anti virus upsell -->
+<!-- set secure root password (practice good security >64 chars) (OR disable password login, explained after) & RECOMMEND add ssh key (instructions provided by them) -->
+<!-- confirm everything is correct -->
+<!-- wait for setup! -->
+<!-- 7Aq4qTBMT1Gzt3K4J2oRzhzdqOn2wE5xvcu9ZpvxDeeO3tR32# -->
+
+After install, SSH into the machine:
+
+```bash
+# use the provided IP address to connect:
+ssh root@<ip address>
+# .. if you have a SSH key configured
+ssh root@<ip address> -i path/to/id_rsa
+```
+
+And now we can proceed with some basic configuration and securing the system:
+
+```bash
+# update the system
+apt-get update && apt-get upgrade -y
+
+# configure firewall
+ufw allow ssh
+ufw allow http
+ufw allow https
+ufw default deny
+ufw enable
+
+# if you have configured an SSH key, disable password authentication:
+sudo sed -E -i 's|^#?(PasswordAuthentication)\s.*|\1 no|' /etc/ssh/sshd_config
+if ! grep '^PasswordAuthentication\s' /etc/ssh/sshd_config; then echo 'PasswordAuthentication no' |sudo tee -a /etc/ssh/sshd_config; fi
+
+# reboot to apply changes
+reboot
+```
+
+Your system is now ready to proceed with installation, but before we continue you should configure your domain.
+
+<!-- screenshot -->
+
+Your domain (or a subdomain) should point to the server's IP (A and AAAA records) or CNAME to the hostname provided.
+
+Next, we must install the required dependencies:
+
+```bash
+# ensure Git and Docker are installed
+apt-get update
+apt-get install ca-certificates curl git micro
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+apt-get update
+apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Now, we can pull in the configuration for Revolt:
+
+```bash
+git clone https://github.com/revoltchat/self-hosted revolt
+cd revolt
+```
+
+Generate a configuration file by running:
+
+```bash
+./generate_config.sh your.domain
+```
+
+You can find [more options here](https://github.com/revoltchat/backend/blob/df074260196f5ed246e6360d8e81ece84d8d9549/crates/core/config/Revolt.toml), some noteworthy configuration options:
+
+- Email verification
+- Captcha
+- A custom S3 server
+
+If you'd like to edit the configuration, just run:
+
+```bash
+micro Revolt.toml
+```
+
+Finally, we can start up Revolt:
+
+```bash
+docker compose up -d
 ```
 
 ## Updating
 
-Before updating, ensure you consult the notices at the top of this README to check if there are any important changes to be aware of.
+Before updating, ensure you consult the notices at the top of this README to check if there are any important changes to be aware of **as well as** [the notices](#notices).
 
 Pull the latest version of this repository:
 
 ```bash
 git pull
 ```
+
+Check if your configuration file is correct by opening [the reference config file](https://github.com/revoltchat/backend/blob/df074260196f5ed246e6360d8e81ece84d8d9549/crates/core/config/Revolt.toml) and your `Revolt.toml` and comparing for changes.
 
 Then pull all the latest images:
 
