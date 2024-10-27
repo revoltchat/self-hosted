@@ -15,8 +15,9 @@ echo "january = \"https://$1/january\"" >> Revolt.toml
 echo "" >> Revolt.toml
 echo "[api.vapid]" >> Revolt.toml
 openssl ecparam -name prime256v1 -genkey -noout -out vapid_private.pem
-echo "private_key = \"$(base64 vapid_private.pem)\"" >> Revolt.toml
+echo "private_key = \"$(base64 vapid_private.pem | tr -d '\n')\"" >> Revolt.toml
 echo "public_key = \"$(openssl ec -in vapid_private.pem -outform DER|tail -c 65|base64|tr '/+' '_-'|tr -d '\n')\"" >> Revolt.toml
+rm vapid_private.pem
 
 # encryption key for files
 echo "" >> Revolt.toml
