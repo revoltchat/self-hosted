@@ -2,6 +2,7 @@
 
 # set hostname for Caddy
 echo "HOSTNAME=https://$1" > .env.web
+echo "REVOLT_PUBLIC_URL=https://$1" >> .env.web
 
 # hostnames
 echo "[hosts]" >> Revolt.toml
