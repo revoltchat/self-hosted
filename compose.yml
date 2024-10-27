@@ -87,8 +87,10 @@ services:
       - minio
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc config host add minio http://minio:9000 minioautumn minioautumn;
-      while ! /usr/bin/mc ready minio; do echo 'Waiting minio...' && sleep 1; done;
+      while ! /usr/bin/mc ready minio; do
+        /usr/bin/mc config host add minio http://minio:9000 minioautumn minioautumn;
+        echo 'Waiting minio...' && sleep 1;
+      done;
       /usr/bin/mc mb minio/attachments;
       /usr/bin/mc mb minio/avatars;
       /usr/bin/mc mb minio/backgrounds;
