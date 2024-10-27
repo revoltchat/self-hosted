@@ -11,7 +11,7 @@
 		}
 
 		uri strip_prefix /ws
-		reverse_proxy @upgrade http://events:9000
+		reverse_proxy @upgrade http://events:14703
 	}
 
 	route /autumn* {
@@ -21,7 +21,7 @@
 
 	route /january* {
 		uri strip_prefix /january
-		reverse_proxy http://january:7000
+		reverse_proxy http://january:14705
 	}
 
 	reverse_proxy http://web:5000
