@@ -61,6 +61,7 @@ services:
   web:
     image: ghcr.io/revoltchat/client:master
     restart: always
+    env_file: .env.web
 
   # File server (autumn)
   autumn:
