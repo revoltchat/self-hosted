@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+# set hostname for Caddy
+echo "HOSTNAME=https://$1" > .env.web
+
 # hostnames
-echo "" >> Revolt.toml
 echo "[hosts]" >> Revolt.toml
 echo "app = \"https://$1\"" >> Revolt.toml
 echo "api = \"https://$1/api\"" >> Revolt.toml
