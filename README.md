@@ -23,8 +23,10 @@ This repository contains configurations and instructions that can be used for de
 
 ## Quick Start (for advanced users)
 
-> [!IMPORTANT]
-> This guide is intended for system administrators that wish to know the bare minimum to deploy, please go to the [Deployment section](#deployment) for detailed instructions!
+> [!CAUTION]
+> This guide is intended for system administrators that wish to know the bare minimum to deploy.
+>
+> # [Read full deployment guide here!](#deployment)
 
 Prerequisites before continuing:
 
@@ -45,6 +47,7 @@ Copy `.env` and download `Revolt.toml`, then modify them according to your requi
 
 ```bash
 echo "HOSTNAME=http://local.revolt.chat" > .env.web
+echo "REVOLT_PUBLIC_URL=http://local.revolt.chat/api" >> .env.web
 wget -O Revolt.toml https://raw.githubusercontent.com/revoltchat/backend/main/crates/core/config/Revolt.toml
 ```
 
