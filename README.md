@@ -26,7 +26,7 @@ This repository contains configurations and instructions that can be used for de
 > [!CAUTION]
 > This guide is intended for system administrators that wish to know the bare minimum to deploy.
 >
-> # [Read full deployment guide here!](#deployment)
+> ## [Read full deployment guide here!](#deployment)
 
 Prerequisites before continuing:
 
