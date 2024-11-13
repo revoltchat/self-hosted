@@ -21,42 +21,6 @@ This repository contains configurations and instructions that can be used for de
 > [!NOTE]
 > amd64 builds are not currently available for the web client.
 
-## Quick Start (for advanced users)
-
-> [!CAUTION]
-> This guide is intended for system administrators that wish to know the bare minimum to deploy.
->
-> ## [Read full deployment guide here!](#deployment)
-
-Prerequisites before continuing:
-
-- [Git](https://git-scm.com)
-- [Docker](https://www.docker.com)
-
-Clone this repository.
-
-```bash
-git clone https://github.com/revoltchat/self-hosted revolt
-cd revolt
-```
-
-Copy `.env` and download `Revolt.toml`, then modify them according to your requirements.
-
-> [!WARNING]
-> The default configurations are intended exclusively for testing and will only work locally. If you wish to deploy to a remote server, you **must** edit the URLs in `.env` and `Revolt.toml`. Please reference the section below on [configuring a custom domain](#custom-domain).
-
-```bash
-echo "HOSTNAME=http://local.revolt.chat" > .env.web
-echo "REVOLT_PUBLIC_URL=http://local.revolt.chat/api" >> .env.web
-wget -O Revolt.toml https://raw.githubusercontent.com/revoltchat/backend/main/crates/core/config/Revolt.toml
-```
-
-Then start Revolt:
-
-```bash
-docker compose up -d
-```
-
 ## Deployment
 
 To get started, find yourself a suitable server to deploy onto, we recommend starting with at least 2 vCPUs and 2 GB of memory.
@@ -206,6 +170,37 @@ docker compose up
 ```
 
 ## Additional Notes
+
+### Quick Start (for advanced users)
+
+Prerequisites before continuing:
+
+- [Git](https://git-scm.com)
+- [Docker](https://www.docker.com)
+
+Clone this repository.
+
+```bash
+git clone https://github.com/revoltchat/self-hosted revolt
+cd revolt
+```
+
+Copy `.env` and download `Revolt.toml`, then modify them according to your requirements.
+
+> [!WARNING]
+> The default configurations are intended exclusively for testing and will only work locally. If you wish to deploy to a remote server, you **must** edit the URLs in `.env` and `Revolt.toml`. Please reference the section below on [configuring a custom domain](#custom-domain).
+
+```bash
+echo "HOSTNAME=http://local.revolt.chat" > .env.web
+echo "REVOLT_PUBLIC_URL=http://local.revolt.chat/api" >> .env.web
+wget -O Revolt.toml https://raw.githubusercontent.com/revoltchat/backend/main/crates/core/config/Revolt.toml
+```
+
+Then start Revolt:
+
+```bash
+docker compose up -d
+```
 
 ### Custom domain
 
