@@ -61,18 +61,37 @@ docker compose up -d
 
 To get started, find yourself a suitable server to deploy onto, we recommend starting with at least 2 vCPUs and 2 GB of memory.
 
-<!-- TODO: promo -->
+> [!TIP] > **We've partnered with Hostinger to bring you a 20% discount off VPS hosting!**
+>
+> 👉 https://www.hostinger.com/vps-hosting?REFERRALCODE=REVOLTCHAT
+>
+> We recommend using the _KVM 2_ plan at minimum! <br> Our testing environment for self-hosted currently sits on a KVM 2 instance and are happy to assist with issues.
 
-<!-- select location -->
-<!-- select ubuntu -->
+The instructions going forwards will use Hostinger as an example hosting platform, but you should be able to adapt these to other platforms if necessary. There are important details throughout.
+
+![Select the location](.github/guide/hostinger-1.location.webp)
 
 When asked, choose **Ubuntu Server** as your operating system, this is used by us in production and we recommend its use.
 
-<!-- anti virus upsell -->
-<!-- set secure root password (practice good security >64 chars) (OR disable password login, explained after) & RECOMMEND add ssh key (instructions provided by them) -->
-<!-- confirm everything is correct -->
-<!-- wait for setup! -->
-<!-- 7Aq4qTBMT1Gzt3K4J2oRzhzdqOn2wE5xvcu9ZpvxDeeO3tR32# -->
+![Select the operating system](.github/guide/hostinger-2.os.webp)
+
+If you've chosen to go with Hostinger, they include integrated malware scanning which may be of interest:
+
+![Consider malware scanning](.github/guide/hostinger-3.malware.webp)
+
+You should set a secure root password for login (_or disable password login after setup, which is explained later! but you shouldn't make the password trivial until after this is secured at least!_) and we recommend that you configure an SSH key:
+
+![Configuration unfilled](.github/guide/hostinger-4.configuration.webp)
+![Configuration filled](.github/guide/hostinger-5.configuration.webp)
+
+Make sure to confirm everything is correct!
+
+![Confirmation](.github/guide/hostinger-6.complete.webp)
+
+Wait for your VPS to be created...
+
+| ![Wait for creation](.github/guide/hostinger-7.wait.webp) | ![Wait for creation](.github/guide/hostinger-8.connect.webp) |
+| --------------------------------------------------------- | ------------------------------------------------------------ |
 
 After install, SSH into the machine:
 
@@ -106,7 +125,7 @@ reboot
 
 Your system is now ready to proceed with installation, but before we continue you should configure your domain.
 
-<!-- screenshot -->
+![Cloudflare DNS configuration](.github/guide/cloudflare-dns.webp)
 
 Your domain (or a subdomain) should point to the server's IP (A and AAAA records) or CNAME to the hostname provided.
 
