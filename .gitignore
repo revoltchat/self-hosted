@@ -1,6 +1,7 @@
 data*
 
 .env
+.env.web
 Revolt.toml
 
 compose.override.yml

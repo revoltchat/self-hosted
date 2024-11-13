@@ -1,3 +1,5 @@
+name: revolt
+
 services:
   # MongoDB database
   database:
@@ -15,16 +17,30 @@ services:
   minio:
     image: minio/minio
     command: server /data
-    env_file: .env
     volumes:
       - ./data/minio:/data
+    environment:
+      MINIO_ROOT_USER: minioautumn
+      MINIO_ROOT_PASSWORD: minioautumn
+      MINIO_DOMAIN: minio
+    networks:
+      default:
+        aliases:
+          - revolt-uploads.minio
+          # legacy support:
+          - attachments.minio
+          - avatars.minio
+          - backgrounds.minio
+          - icons.minio
+          - banners.minio
+          - emojis.minio
     restart: always
 
   # Caddy web server
   caddy:
     image: caddy
     restart: always
-    env_file: .env
+    env_file: .env.web
     ports:
       - "80:80"
       - "443:443"
@@ -35,24 +51,20 @@ services:
 
   # API server (delta)
   api:
-    image: ghcr.io/revoltchat/server:20240929-1
-    env_file: .env
+    image: ghcr.io/revoltchat/server:20241024-1
     depends_on:
       - database
       - redis
-      - caddy
     volumes:
       - ./Revolt.toml:/Revolt.toml
     restart: always
 
   # Events service (quark)
   events:
-    image: ghcr.io/revoltchat/bonfire:20240929-1
-    env_file: .env
+    image: ghcr.io/revoltchat/bonfire:20241024-1
     depends_on:
       - database
       - redis
-      - caddy
     volumes:
       - ./Revolt.toml:/Revolt.toml
     restart: always
@@ -60,28 +72,24 @@ services:
   # Web App (revite)
   web:
     image: ghcr.io/revoltchat/client:master
-    env_file: .env
-    depends_on:
-      - caddy
     restart: always
+    env_file: .env.web
 
   # File server (autumn)
   autumn:
-    image: ghcr.io/revoltchat/autumn:1.1.11
-    env_file: .env
+    image: ghcr.io/revoltchat/autumn:20241024-1
     depends_on:
       - database
       - createbuckets
-      - caddy
-    environment:
-      - AUTUMN_MONGO_URI=mongodb://database
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
     restart: always
 
   # Metadata and image proxy (january)
   january:
-    image: ghcr.io/revoltchat/january:0.3.5
-    depends_on:
-      - caddy
+    image: ghcr.io/revoltchat/january:20241024-1
+    volumes:
+      - ./Revolt.toml:/Revolt.toml
     restart: always
 
   # Create buckets for minio.
@@ -89,16 +97,12 @@ services:
     image: minio/mc
     depends_on:
       - minio
-    env_file: .env
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc config host add minio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD;
-      while ! /usr/bin/mc ready minio; do echo 'Waiting minio...' && sleep 1; done;
-      /usr/bin/mc mb minio/attachments;
-      /usr/bin/mc mb minio/avatars;
-      /usr/bin/mc mb minio/backgrounds;
-      /usr/bin/mc mb minio/icons;
-      /usr/bin/mc mb minio/banners;
-      /usr/bin/mc mb minio/emojis;
+      while ! /usr/bin/mc ready minio; do
+        /usr/bin/mc config host add minio http://minio:9000 minioautumn minioautumn;
+        echo 'Waiting minio...' && sleep 1;
+      done;
+      /usr/bin/mc mb minio/revolt-uploads;
       exit 0;
       "
