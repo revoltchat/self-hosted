@@ -19,7 +19,7 @@ This repository contains configurations and instructions that can be used for de
 > Please consult _[What can I do with Revolt and how do I self-host?](https://developers.revolt.chat/faq.html#admonition-what-can-i-do-with-revolt-and-how-do-i-self-host)_ on our developer site for information about licensing and brand use.
 
 > [!NOTE]
-> amd64 builds are only available for `backend` and `bonfire` images currently, more to come.
+> amd64 builds are not currently available for the web client.
 
 ## Quick Start (for advanced users)
 
@@ -61,7 +61,9 @@ docker compose up -d
 
 To get started, find yourself a suitable server to deploy onto, we recommend starting with at least 2 vCPUs and 2 GB of memory.
 
-> [!TIP] > **We've partnered with Hostinger to bring you a 20% discount off VPS hosting!**
+> [!TIP]
+>
+> **We've partnered with Hostinger to bring you a 20% discount off VPS hosting!**
 >
 > 👉 https://www.hostinger.com/vps-hosting?REFERRALCODE=REVOLTCHAT
 >
