@@ -366,7 +366,7 @@ db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 > ```
 
 > [!IMPORTANT]
-> As of day November 2024, the following breaking changes have been applied:
+> As of November 28 2024, the following breaking changes have been applied:
 > - Rename config section `api.vapid` -> `pushd.vapid`
 > - Rename config section `api.fcm` -> `pushd.fcm`
 > - Rename config section `api.apn` -> `pushd.apn`
