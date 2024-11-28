@@ -12,11 +12,18 @@ echo "events = \"wss://$1/ws\"" >> Revolt.toml
 echo "autumn = \"https://$1/autumn\"" >> Revolt.toml
 echo "january = \"https://$1/january\"" >> Revolt.toml
 
+# Rabbit target, since rabbit isn't set up for docker by default
+echo "" >> Revolt.toml
+echo "[rabbit]" >> Revolt.toml
+echo "host = \"rabbit\"" >> Revolt.toml
+echo "user = \"rabbituser\"" >> Revolt.toml
+echo "password = \"rabbitpass\"" >> Revolt.toml
+
 # VAPID keys
 echo "" >> Revolt.toml
-echo "[api.vapid]" >> Revolt.toml
+echo "[pushd.vapid]" >> Revolt.toml
 openssl ecparam -name prime256v1 -genkey -noout -out vapid_private.pem
-echo "private_key = \"$(base64 vapid_private.pem | tr -d '\n')\"" >> Revolt.toml
+echo "private_key = \"$(base64 -i vapid_private.pem | tr -d '\n')\"" >> Revolt.toml
 echo "public_key = \"$(openssl ec -in vapid_private.pem -outform DER|tail -c 65|base64|tr '/+' '_-'|tr -d '\n')\"" >> Revolt.toml
 rm vapid_private.pem
 

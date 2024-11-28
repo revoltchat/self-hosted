@@ -132,6 +132,7 @@ You can find [more options here](https://github.com/revoltchat/backend/blob/df07
 - Email verification
 - Captcha
 - A custom S3 server
+- iOS & Android notifications (Requires Apple/Google developer accounts)
 
 If you'd like to edit the configuration, just run:
 
@@ -360,3 +361,23 @@ db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 > npm i mongodb
 > node ./20240929-autumn-rewrite.mjs
 > ```
+
+> [!IMPORTANT]
+> As of day November 2024, the following breaking changes have been applied:
+> - Rename config section `api.vapid` -> `pushd.vapid`
+> - Rename config section `api.fcm` -> `pushd.fcm`
+> - Rename config section `api.apn` -> `pushd.apn`
+> - The following fields are needed when using the provided docker compose:
+> ```toml
+> [rabbit]
+> host = "rabbit"
+> username = "rabbituser"
+> password = "rabbitpass"
+> ```
+>
+> These will NOT automatically be applied to your config, and must be changed/added manually.
+> 
+>
+> The following components have been added to the compose file:
+> - Added `rabbit` (RabbitMQ) and `pushd` (Revolt push daemon)
+>
