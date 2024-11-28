@@ -15,6 +15,9 @@ Self-hosting Revolt using Docker
 
 This repository contains configurations and instructions that can be used for deploying Revolt.
 
+> [!IMPORTANT]
+> If you are updating an instance from before November 28 2024, please see the changes at the bottom of this readme!
+
 > [!NOTE]
 > Please consult _[What can I do with Revolt and how do I self-host?](https://developers.revolt.chat/faq.html#admonition-what-can-i-do-with-revolt-and-how-do-i-self-host)_ on our developer site for information about licensing and brand use.
 
