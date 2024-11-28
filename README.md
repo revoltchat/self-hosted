@@ -370,13 +370,6 @@ db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 > - Rename config section `api.vapid` -> `pushd.vapid`
 > - Rename config section `api.fcm` -> `pushd.fcm`
 > - Rename config section `api.apn` -> `pushd.apn`
-> - The following fields are needed when using the provided docker compose:
-> ```toml
-> [rabbit]
-> host = "rabbit"
-> username = "rabbituser"
-> password = "rabbitpass"
-> ```
 >
 > These will NOT automatically be applied to your config, and must be changed/added manually.
 > 
