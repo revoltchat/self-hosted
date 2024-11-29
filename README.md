@@ -78,6 +78,8 @@ apt-get update && apt-get upgrade -y
 ufw allow ssh
 ufw allow http
 ufw allow https
+ufw allow 10000:10100/tcp
+ufw allow 10000:10100/udp
 ufw default deny
 ufw enable
 
@@ -126,6 +128,8 @@ Generate a configuration file by running:
 ```bash
 ./generate_config.sh <your.domain> <vortex rtc ips>
 ```
+
+For `<vortex rtc ips>`, you will likely want to specify `0.0.0.0,your.external.ip.address`; For more information, see the [vortex's readme](https://github.com/revoltchat/vortex).
 
 You can find [more options here](https://github.com/revoltchat/backend/blob/df074260196f5ed246e6360d8e81ece84d8d9549/crates/core/config/Revolt.toml), some noteworthy configuration options:
 
