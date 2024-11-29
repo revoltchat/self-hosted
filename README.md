@@ -15,6 +15,9 @@ Self-hosting Revolt using Docker
 
 This repository contains configurations and instructions that can be used for deploying Revolt.
 
+> [!IMPORTANT]
+> If you are updating an instance from before November 28 2024, please see the changes at the bottom of this readme!
+
 > [!NOTE]
 > Please consult _[What can I do with Revolt and how do I self-host?](https://developers.revolt.chat/faq.html#admonition-what-can-i-do-with-revolt-and-how-do-i-self-host)_ on our developer site for information about licensing and brand use.
 
@@ -132,6 +135,7 @@ You can find [more options here](https://github.com/revoltchat/backend/blob/df07
 - Email verification
 - Captcha
 - A custom S3 server
+- iOS & Android notifications (Requires Apple/Google developer accounts)
 
 If you'd like to edit the configuration, just run:
 
@@ -360,3 +364,16 @@ db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 > npm i mongodb
 > node ./20240929-autumn-rewrite.mjs
 > ```
+
+> [!IMPORTANT]
+> As of November 28 2024, the following breaking changes have been applied:
+> - Rename config section `api.vapid` -> `pushd.vapid`
+> - Rename config section `api.fcm` -> `pushd.fcm`
+> - Rename config section `api.apn` -> `pushd.apn`
+>
+> These will NOT automatically be applied to your config, and must be changed/added manually.
+> 
+>
+> The following components have been added to the compose file:
+> - Added `rabbit` (RabbitMQ) and `pushd` (Revolt push daemon)
+>
