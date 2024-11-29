@@ -124,7 +124,7 @@ cd revolt
 Generate a configuration file by running:
 
 ```bash
-./generate_config.sh your.domain
+./generate_config.sh <your.domain> <vortex rtc ips>
 ```
 
 You can find [more options here](https://github.com/revoltchat/backend/blob/df074260196f5ed246e6360d8e81ece84d8d9549/crates/core/config/Revolt.toml), some noteworthy configuration options:

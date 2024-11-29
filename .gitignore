@@ -2,6 +2,7 @@ data*
 
 .env
 .env.web
+.env.vortex
 Revolt.toml
 
 compose.override.yml
