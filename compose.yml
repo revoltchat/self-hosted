@@ -16,9 +16,9 @@ services:
 
   # Redis server
   redis:
-    image: eqalpha/keydb  
+    image: eqalpha/keydb
     restart: always
-  
+
   rabbit:
     image: rabbitmq:4
     restart: always
@@ -81,7 +81,9 @@ services:
       rabbit:
         condition: service_healthy
     volumes:
-      - ./Revolt.toml:/Revolt.toml
+      - type: bind
+        source: ./Revolt.toml
+        target: /Revolt.toml
     restart: always
 
   # Events service (quark)
@@ -93,7 +95,9 @@ services:
       redis:
         condition: service_started
     volumes:
-      - ./Revolt.toml:/Revolt.toml
+      - type: bind
+        source: ./Revolt.toml
+        target: /Revolt.toml
     restart: always
 
   # Web App (revite)
@@ -111,16 +115,20 @@ services:
       createbuckets:
         condition: service_started
     volumes:
-      - ./Revolt.toml:/Revolt.toml
+      - type: bind
+        source: ./Revolt.toml
+        target: /Revolt.toml
     restart: always
 
   # Metadata and image proxy (january)
   january:
     image: ghcr.io/revoltchat/january:20241128-3
     volumes:
-      - ./Revolt.toml:/Revolt.toml
+      - type: bind
+        source: ./Revolt.toml
+        target: /Revolt.toml
     restart: always
-  
+
   # Push notification daemon (pushd)
   pushd:
     image: ghcr.io/revoltchat/pushd:20241128-3
@@ -132,7 +140,9 @@ services:
       rabbit:
         condition: service_healthy
     volumes:
-      - ./Revolt.toml:/Revolt.toml
+      - type: bind
+        source: ./Revolt.toml
+        target: /Revolt.toml
     restart: always
 
   # Create buckets for minio.
