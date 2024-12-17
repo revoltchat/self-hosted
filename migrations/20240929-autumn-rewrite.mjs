@@ -56,7 +56,7 @@ async function determineUploaderIdAndUse(f, v, i) {
       uploaded_at: new Date(decodeTime(f.message_id)),
       uploader_id: objectLookup[f.message_id].author,
       used_for: {
-        type: "message",
+        type: "Message",
         id: f.message_id,
       },
     };
@@ -84,7 +84,7 @@ async function determineUploaderIdAndUse(f, v, i) {
       uploaded_at: new Date(),
       uploader_id: objectLookup[f.server_id].owner,
       used_for: {
-        type: "serverBanner",
+        type: "ServerBanner",
         id: f.server_id,
       },
     };
@@ -111,7 +111,7 @@ async function determineUploaderIdAndUse(f, v, i) {
       uploaded_at: new Date(decodeTime(f.object_id)),
       uploader_id: objectLookup[f.object_id].creator_id,
       used_for: {
-        type: "emoji",
+        type: "Emoji",
         id: f.object_id,
       },
     };
@@ -151,7 +151,7 @@ async function determineUploaderIdAndUse(f, v, i) {
       uploaded_at: new Date(),
       uploader_id: f.user_id,
       used_for: {
-        type: "userAvatar",
+        type: "UserAvatar",
         id: f.user_id,
       },
     };
@@ -191,7 +191,7 @@ async function determineUploaderIdAndUse(f, v, i) {
       uploaded_at: new Date(),
       uploader_id: f.user_id,
       used_for: {
-        type: "userProfileBackground",
+        type: "UserProfileBackground",
         id: f.user_id,
       },
     };
@@ -221,7 +221,7 @@ async function determineUploaderIdAndUse(f, v, i) {
         uploaded_at: new Date(),
         uploader_id: f.object_id,
         used_for: {
-          type: "legacyGroupIcon",
+          type: "LegacyGroupIcon",
           id: f.object_id,
         },
       };
@@ -281,7 +281,7 @@ async function determineUploaderIdAndUse(f, v, i) {
         uploaded_at: new Date(),
         uploader_id: (server ?? objectLookup[f.object_id]).owner,
         used_for: {
-          type: "channelIcon",
+          type: "ChannelIcon",
           id: f.object_id,
         },
       };
@@ -291,7 +291,7 @@ async function determineUploaderIdAndUse(f, v, i) {
       uploaded_at: new Date(),
       uploader_id: objectLookup[f.object_id].owner,
       used_for: {
-        type: "serverIcon",
+        type: "ServerIcon",
         id: f.object_id,
       },
     };
