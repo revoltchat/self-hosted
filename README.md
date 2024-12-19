@@ -16,7 +16,10 @@ Self-hosting Revolt using Docker
 This repository contains configurations and instructions that can be used for deploying Revolt.
 
 > [!IMPORTANT]
-> If you are updating an instance from before November 28 2024, please see the changes at the bottom of this readme!
+> If you are updating an instance from before November 28 2024, please see the [notices section](#notices) at the bottom of this readme!
+
+> [!IMPORTANT]
+> A list of security advisories is [provided at the bottom](#security-advisories).
 
 > [!NOTE]
 > Please consult _[What can I do with Revolt and how do I self-host?](https://developers.revolt.chat/faq.html#admonition-what-can-i-do-with-revolt-and-how-do-i-self-host)_ on our developer site for information about licensing and brand use.
@@ -376,4 +379,8 @@ db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 >
 > The following components have been added to the compose file:
 > - Added `rabbit` (RabbitMQ) and `pushd` (Revolt push daemon)
->
+
+## Security Advisories
+
+- (`2024-06-21`) [GHSA-f26h-rqjq-qqjq revoltchat/backend: Unrestricted account creation](https://github.com/revoltchat/backend/security/advisories/GHSA-f26h-rqjq-qqjq)
+- (`2024-12-17`) [GHSA-7f9x-pm3g-j7p4 revoltchat/january: January service can call itself recursively causing heavy load](https://github.com/revoltchat/january/security/advisories/GHSA-7f9x-pm3g-j7p4)
