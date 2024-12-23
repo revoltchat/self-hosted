@@ -72,7 +72,7 @@ services:
 
   # API server (delta)
   api:
-    image: ghcr.io/revoltchat/server:20241128-3
+    image: ghcr.io/revoltchat/server:20241213-1
     depends_on:
       database:
         condition: service_healthy
@@ -88,7 +88,7 @@ services:
 
   # Events service (quark)
   events:
-    image: ghcr.io/revoltchat/bonfire:20241128-3
+    image: ghcr.io/revoltchat/bonfire:20241213-1
     depends_on:
       database:
         condition: service_healthy
@@ -108,7 +108,7 @@ services:
 
   # File server (autumn)
   autumn:
-    image: ghcr.io/revoltchat/autumn:20241128-3
+    image: ghcr.io/revoltchat/autumn:20241213-1
     depends_on:
       database:
         condition: service_healthy
@@ -122,7 +122,7 @@ services:
 
   # Metadata and image proxy (january)
   january:
-    image: ghcr.io/revoltchat/january:20241128-3
+    image: ghcr.io/revoltchat/january:20241213-1
     volumes:
       - type: bind
         source: ./Revolt.toml
@@ -131,7 +131,7 @@ services:
 
   # Push notification daemon (pushd)
   pushd:
-    image: ghcr.io/revoltchat/pushd:20241128-3
+    image: ghcr.io/revoltchat/pushd:20241213-1
     depends_on:
       database:
         condition: service_healthy
