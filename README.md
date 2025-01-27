@@ -130,6 +130,7 @@ cd revolt
 Generate a configuration file by running:
 
 ```bash
+chmod +x ./generate_config.sh
 ./generate_config.sh your.domain
 ```
 
