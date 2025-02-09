@@ -5,13 +5,8 @@
 	}
 
 	route /ws {
-		@upgrade {
-			header Connection *Upgrade*
-			header Upgrade websocket
-		}
-
 		uri strip_prefix /ws
-		reverse_proxy @upgrade http://events:14703
+		reverse_proxy http://events:14703
 	}
 
 	route /autumn* {
