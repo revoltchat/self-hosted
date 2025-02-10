@@ -15,17 +15,30 @@ Self-hosting Revolt using Docker
 
 This repository contains configurations and instructions that can be used for deploying Revolt.
 
-> [!IMPORTANT]
-> If you are updating an instance from before November 28 2024, please see the [notices section](#notices) at the bottom of this readme!
+> [!WARNING]
+> If you are updating an instance from before November 28, 2024, please see the [notices section](#notices) at the bottom of this README!
 
 > [!IMPORTANT]
 > A list of security advisories is [provided at the bottom](#security-advisories).
 
 > [!NOTE]
-> Please consult _[What can I do with Revolt and how do I self-host?](https://developers.revolt.chat/faq.html#admonition-what-can-i-do-with-revolt-and-how-do-i-self-host)_ on our developer site for information about licensing and brand use.
+> Please consult _[What can I do with Revolt, and how do I self-host?](https://developers.revolt.chat/faq.html#admonition-what-can-i-do-with-revolt-and-how-do-i-self-host)_ on our developer site for information about licensing and brand use.
 
 > [!NOTE]
 > amd64 builds are not currently available for the web client.
+
+## Table of Contents
+- [Deployment](#deployment)
+- [Updating](#updating)
+- [Advanced Deployment](#advanced-deployment)
+- [Additional Notes](#additional-notes)
+  - [Custom Domain](#custom-domain)
+  - [Placing Behind Another Reverse-Proxy or Another Port](#placing-behind-another-reverse-proxy-or-another-port)
+  - [Insecurely Expose the Database](#insecurely-expose-the-database)
+  - [Mongo Compatibility](#mongo-compatibility)
+  - [Making Your Instance Invite-only](#making-your-instance-invite-only)
+- [Notices](#notices)
+- [Security Advisories](#security-advisories)
 
 ## Deployment
 
@@ -37,17 +50,18 @@ To get started, find yourself a suitable server to deploy onto, we recommend sta
 >
 > 👉 https://www.hostinger.com/vps-hosting?REFERRALCODE=REVOLTCHAT
 >
-> We recommend using the _KVM 2_ plan at minimum! <br> Our testing environment for self-hosted currently sits on a KVM 2 instance and are happy to assist with issues.
+> We recommend using the _KVM 2_ plan at minimum!\
+> Our testing environment for self-hosted currently sits on a KVM 2 instance, and we are happy to assist with issues.
 
-The instructions going forwards will use Hostinger as an example hosting platform, but you should be able to adapt these to other platforms if necessary. There are important details throughout.
+The instructions going forward will use Hostinger as an example hosting platform, but you should be able to adapt these to other platforms as necessary. There are important details throughout.
 
 ![Select the location](.github/guide/hostinger-1.location.webp)
 
-When asked, choose **Ubuntu Server** as your operating system, this is used by us in production and we recommend its use.
+When asked, choose **Ubuntu Server** as your operating system; this is used by us in production, and we recommend its use.
 
 ![Select the operating system](.github/guide/hostinger-2.os.webp)
 
-If you've chosen to go with Hostinger, they include integrated malware scanning which may be of interest:
+If you've chosen to go with Hostinger, they include integrated malware scanning, which may be of interest:
 
 ![Consider malware scanning](.github/guide/hostinger-3.malware.webp)
 
@@ -65,7 +79,7 @@ Wait for your VPS to be created...
 | ![Wait for creation](.github/guide/hostinger-7.wait.webp) | ![Wait for creation](.github/guide/hostinger-8.connect.webp) |
 | --------------------------------------------------------- | ------------------------------------------------------------ |
 
-After install, SSH into the machine:
+After installation, SSH into the machine:
 
 ```bash
 # use the provided IP address to connect:
@@ -95,7 +109,7 @@ if ! grep '^PasswordAuthentication\s' /etc/ssh/sshd_config; then echo 'PasswordA
 reboot
 ```
 
-Your system is now ready to proceed with installation, but before we continue you should configure your domain.
+Your system is now ready to proceed with installation, but before we continue, you should configure your domain.
 
 ![Cloudflare DNS configuration](.github/guide/cloudflare-dns.webp)
 
@@ -147,7 +161,13 @@ If you'd like to edit the configuration, just run:
 micro Revolt.toml
 ```
 
-Finally, we can start up Revolt:
+Finally, we can start up Revolt. First, run it in the foreground with:
+
+```bash
+docker compose up
+```
+
+If it runs without any critical errors, you can stop it with <kbd>Ctrl<kbd> + <kbd>C</kbd> and run it detached (in the background) by appending `-d`.
 
 ```bash
 docker compose up -d
@@ -155,7 +175,7 @@ docker compose up -d
 
 ## Updating
 
-Before updating, ensure you consult the notices at the top of this README to check if there are any important changes to be aware of **as well as** [the notices](#notices).
+Before updating, ensure you consult the notices at the top of this README, **as well as** [the notices](#notices) at the bottom, to check if there are any important changes to be aware of.
 
 Pull the latest version of this repository:
 
@@ -163,7 +183,7 @@ Pull the latest version of this repository:
 git pull
 ```
 
-Check if your configuration file is correct by opening [the reference config file](https://github.com/revoltchat/backend/blob/df074260196f5ed246e6360d8e81ece84d8d9549/crates/core/config/Revolt.toml) and your `Revolt.toml` and comparing for changes.
+Check if your configuration file is correct by opening [the reference config file](https://github.com/revoltchat/backend/blob/df074260196f5ed246e6360d8e81ece84d8d9549/crates/core/config/Revolt.toml) and your `Revolt.toml` to compare changes.
 
 Then pull all the latest images:
 
@@ -174,12 +194,12 @@ docker compose pull
 Then restart the services:
 
 ```bash
-docker compose up
+docker compose up -d
 ```
 
-## Additional Notes
+## Advanced Deployment
 
-### Quick Start (for advanced users)
+This guide assumes you know your way around a Linux terminal and Docker.
 
 Prerequisites before continuing:
 
@@ -193,10 +213,10 @@ git clone https://github.com/revoltchat/self-hosted revolt
 cd revolt
 ```
 
-Copy `.env` and download `Revolt.toml`, then modify them according to your requirements.
+Create `.env.web` and download `Revolt.toml`, then modify them according to your requirements.
 
 > [!WARNING]
-> The default configurations are intended exclusively for testing and will only work locally. If you wish to deploy to a remote server, you **must** edit the URLs in `.env` and `Revolt.toml`. Please reference the section below on [configuring a custom domain](#custom-domain).
+> The default configurations are intended exclusively for testing and will only work locally. If you wish to deploy to a remote server, you **must** edit the URLs in `.env.web` and `Revolt.toml`. Please reference the section below on [configuring a custom domain](#custom-domain).
 
 ```bash
 echo "HOSTNAME=http://local.revolt.chat" > .env.web
@@ -210,51 +230,51 @@ Then start Revolt:
 docker compose up -d
 ```
 
-### Custom domain
+## Additional Notes
 
-To configure a custom domain, you will need to replace all instances of `local.revolt.chat` in the `Revolt.toml` and `.env` files, like so:
+### Custom Domain
+
+To configure a custom domain, you will need to replace *all* instances of `local.revolt.chat` in `Revolt.toml` and `.env.web` to your chosen domain (here represented as `example.com`), like so:
 
 ```diff
-# .env
-- REVOLT_APP_URL=http://local.revolt.chat
-+ REVOLT_APP_URL=http://my.domain
+# .env.web
+- REVOLT_PUBLIC_URL=http://local.revolt.chat/api
++ REVOLT_PUBLIC_URL=http://example.com
 ```
 
 ```diff
 # Revolt.toml
 - app = "http://local.revolt.chat"
-+ app = "http://my.domain"
-```
-
-You will also want to change the protocols to enable HTTPS:
-
-```diff
-# .env
-- REVOLT_APP_URL=http://my.domain
-+ REVOLT_APP_URL=https://my.domain
-
-- REVOLT_EXTERNAL_WS_URL=ws://my.domain/ws
-+ REVOLT_EXTERNAL_WS_URL=wss://my.domain/ws
-```
-
-```diff
-# Revolt.toml
-- app = "http://local.revolt.chat"
-+ app = "https://my.domain"
-
-- events = "ws://my.domain/ws"
-+ events = "wss://my.domain/ws"
++ app = "http://example.com"
 ```
 
 In the case of `HOSTNAME`, you must strip the protocol prefix:
-
 ```diff
-# .env
-- HOSTNAME=https://my.domain
-+ HOSTNAME=my.domain
+# .env.web
+- HOSTNAME=http://example.com
++ HOSTNAME=example.com
 ```
 
-### Putting Revolt behind another reverse proxy (or on a non-standard port)
+You will likely also want to change the protocols to enable HTTPS:
+
+```diff
+# .env.web
+- REVOLT_PUBLIC_URL=http://example.com
++ REVOLT_PUBLIC_URL=https://example.com
+```
+
+```diff
+# Revolt.toml
+- app = "http://example.com"
++ app = "https://example.com"
+
+- events = "ws://example.com/ws"
++ events = "wss://example.com/ws"
+```
+
+### Placing Behind Another Reverse-Proxy or Another Port
+
+If you'd like to place Revolt behind another reverse proxy or on a non-standard port, you'll need to edit `compose.yml`. 
 
 Override the port definitions on `caddy`:
 
@@ -267,19 +287,19 @@ services:
 ```
 
 > [!WARNING]
-> This file is not Git ignored. It may be sufficient to use an override file, but that will not remove port 80 / 443 allocations.
+> This file is not included in `.gitignore`. It may be sufficient to use an override file, but that will not remove port `80` / `443` allocations.
 
 Update the hostname used by the web server:
 
 ```diff
-# .env
-- HOSTNAME=http://local.revolt.chat
+# .env.web
+- HOSTNAME=http://example.com
 + HOSTNAME=:80
 ```
 
-You can now reverse proxy to http://localhost:1234.
+You can now reverse proxy to <http://localhost:1234>.
 
-### Insecurely expose database
+### Insecurely Expose the Database
 
 You can insecurely expose the database by adding a port definition:
 
@@ -291,9 +311,11 @@ services:
       - "27017:27017"
 ```
 
-### Mongo compatibility
+For obvious reasons, be careful doing this.
 
-Older processors may not support the latest MongoDB version, you may pin to MongoDB 4.4 as such:
+### Mongo Compatibility
+
+Older processors may not support the latest MongoDB version; you may pin to MongoDB 4.4 as such:
 
 ```yml
 # compose.override.yml
@@ -302,9 +324,9 @@ services:
     image: mongo:4.4
 ```
 
-### Making your instance invite-only
+### Making Your Instance Invite-only
 
-Enable invite-only mode by setting `REVOLT_INVITE_ONLY` in `.env` to `1` and `invite_only` in `Revolt.toml` to `true`.
+Enable invite-only mode by setting `invite_only` in `Revolt.toml` to `true`.
 
 Create an invite:
 
@@ -340,7 +362,7 @@ db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 > ```
 
 > [!IMPORTANT]
-> As of 30th September 2024, Autumn has undergone a major refactor which requires a manual migration.
+> As of 30th September 2024, Autumn has undergone a major refactor, which requires a manual migration.
 >
 > To begin, add a temporary container that we can work from:
 >
@@ -370,12 +392,12 @@ db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 > ```
 
 > [!IMPORTANT]
-> As of November 28 2024, the following breaking changes have been applied:
+> As of November 28, 2024, the following breaking changes have been applied:
 > - Rename config section `api.vapid` -> `pushd.vapid`
 > - Rename config section `api.fcm` -> `pushd.fcm`
 > - Rename config section `api.apn` -> `pushd.apn`
 >
-> These will NOT automatically be applied to your config, and must be changed/added manually.
+> These will NOT automatically be applied to your config and must be changed/added manually.
 > 
 >
 > The following components have been added to the compose file:
@@ -383,5 +405,5 @@ db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 
 ## Security Advisories
 
-- (`2024-06-21`) [GHSA-f26h-rqjq-qqjq revoltchat/backend: Unrestricted account creation](https://github.com/revoltchat/backend/security/advisories/GHSA-f26h-rqjq-qqjq)
-- (`2024-12-17`) [GHSA-7f9x-pm3g-j7p4 revoltchat/january: January service can call itself recursively causing heavy load](https://github.com/revoltchat/january/security/advisories/GHSA-7f9x-pm3g-j7p4)
+- (`2024-06-21`) [GHSA-f26h-rqjq-qqjq revoltchat/backend: Unrestricted account creation.](https://github.com/revoltchat/backend/security/advisories/GHSA-f26h-rqjq-qqjq)
+- (`2024-12-17`) [GHSA-7f9x-pm3g-j7p4 revoltchat/january: January service can call itself recursively, causing heavy load.](https://github.com/revoltchat/january/security/advisories/GHSA-7f9x-pm3g-j7p4)
