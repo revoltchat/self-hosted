@@ -1,7 +1,7 @@
 name: revolt
 
 services:
-  # MongoDB database
+  # MongoDB: Database
   database:
     image: mongo
     restart: always
@@ -14,11 +14,12 @@ services:
       retries: 5
       start_period: 10s
 
-  # Redis server
+  # Redis: Event message broker & KV store
   redis:
     image: eqalpha/keydb
     restart: always
 
+  # RabbitMQ: Internal message broker
   rabbit:
     image: rabbitmq:4
     restart: always
@@ -34,7 +35,7 @@ services:
       retries: 3
       start_period: 20s
 
-  # S3-compatible storage server
+  # MinIO: S3-compatible storage server
   minio:
     image: minio/minio
     command: server /data
@@ -57,7 +58,7 @@ services:
           - emojis.minio
     restart: always
 
-  # Caddy web server
+  # Caddy: Web server
   caddy:
     image: caddy
     restart: always
@@ -70,9 +71,9 @@ services:
       - ./data/caddy-data:/data
       - ./data/caddy-config:/config
 
-  # API server (delta)
+  # API server
   api:
-    image: ghcr.io/revoltchat/server:20241213-1
+    image: ghcr.io/revoltchat/server:20250201-1
     depends_on:
       database:
         condition: service_healthy
@@ -86,9 +87,9 @@ services:
         target: /Revolt.toml
     restart: always
 
-  # Events service (quark)
+  # Events service
   events:
-    image: ghcr.io/revoltchat/bonfire:20241213-1
+    image: ghcr.io/revoltchat/bonfire:20250201-1
     depends_on:
       database:
         condition: service_healthy
@@ -100,15 +101,15 @@ services:
         target: /Revolt.toml
     restart: always
 
-  # Web App (revite)
+  # Web App
   web:
     image: ghcr.io/revoltchat/client:master
     restart: always
     env_file: .env.web
 
-  # File server (autumn)
+  # File server
   autumn:
-    image: ghcr.io/revoltchat/autumn:20241213-1
+    image: ghcr.io/revoltchat/autumn:20250201-1
     depends_on:
       database:
         condition: service_healthy
@@ -120,18 +121,32 @@ services:
         target: /Revolt.toml
     restart: always
 
-  # Metadata and image proxy (january)
+  # Metadata and image proxy
   january:
-    image: ghcr.io/revoltchat/january:20241213-1
+    image: ghcr.io/revoltchat/january:20250201-1
     volumes:
       - type: bind
         source: ./Revolt.toml
         target: /Revolt.toml
     restart: always
 
-  # Push notification daemon (pushd)
+  # Regular task daemon
+  crond:
+    image: ghcr.io/revoltchat/crond:20250201-1
+    depends_on:
+      database:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    volumes:
+      - type: bind
+        source: ./Revolt.toml
+        target: /Revolt.toml
+    restart: always
+
+  # Push notification daemon
   pushd:
-    image: ghcr.io/revoltchat/pushd:20241213-1
+    image: ghcr.io/revoltchat/pushd:20250201-1
     depends_on:
       database:
         condition: service_healthy
