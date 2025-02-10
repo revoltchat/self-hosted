@@ -407,3 +407,5 @@ db.invites.insertOne({ _id: "enter_an_invite_code_here" })
 
 - (`2024-06-21`) [GHSA-f26h-rqjq-qqjq revoltchat/backend: Unrestricted account creation.](https://github.com/revoltchat/backend/security/advisories/GHSA-f26h-rqjq-qqjq)
 - (`2024-12-17`) [GHSA-7f9x-pm3g-j7p4 revoltchat/january: January service can call itself recursively, causing heavy load.](https://github.com/revoltchat/january/security/advisories/GHSA-7f9x-pm3g-j7p4)
+- (`2025-02-10`) [GHSA-8684-rvfj-v3jq revoltchat/backend: Webhook tokens are freely accessible for users with read permissions.](https://github.com/revoltchat/backend/security/advisories/GHSA-h7h6-7pxm-mc66)
+- (`2025-02-10`) [GHSA-h7h6-7pxm-mc66 revoltchat/backend: Nearby message fetch requests can be crafted to fetch entire message history.](https://github.com/revoltchat/backend/security/advisories/GHSA-h7h6-7pxm-mc66)
