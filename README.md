@@ -167,7 +167,7 @@ Finally, we can start up Revolt. First, run it in the foreground with:
 docker compose up
 ```
 
-If it runs without any critical errors, you can stop it with <kbd>Ctrl<kbd> + <kbd>C</kbd> and run it detached (in the background) by appending `-d`.
+If it runs without any critical errors, you can stop it with <kbd>Ctrl</kbd> + <kbd>C</kbd> and run it detached (in the background) by appending `-d`.
 
 ```bash
 docker compose up -d
