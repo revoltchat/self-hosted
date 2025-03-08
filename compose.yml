@@ -3,7 +3,7 @@ name: revolt
 services:
   # MongoDB: Database
   database:
-    image: mongo
+    image: docker.io/mongo
     restart: always
     volumes:
       - ./data/db:/data/db
@@ -16,12 +16,12 @@ services:
 
   # Redis: Event message broker & KV store
   redis:
-    image: eqalpha/keydb
+    image: docker.io/eqalpha/keydb
     restart: always
 
   # RabbitMQ: Internal message broker
   rabbit:
-    image: rabbitmq:4
+    image: docker.io/rabbitmq:4
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: rabbituser
@@ -37,7 +37,7 @@ services:
 
   # MinIO: S3-compatible storage server
   minio:
-    image: minio/minio
+    image: docker.io/minio/minio
     command: server /data
     volumes:
       - ./data/minio:/data
@@ -60,7 +60,7 @@ services:
 
   # Caddy: Web server
   caddy:
-    image: caddy
+    image: docker.io/caddy
     restart: always
     env_file: .env.web
     ports:
@@ -162,7 +162,7 @@ services:
 
   # Create buckets for minio.
   createbuckets:
-    image: minio/mc
+    image: docker.io/minio/mc
     depends_on:
       - minio
     entrypoint: >
