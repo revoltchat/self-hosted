@@ -31,6 +31,7 @@ This repository contains configurations and instructions that can be used for de
 - [Deployment](#deployment)
 - [Updating](#updating)
 - [Advanced Deployment](#advanced-deployment)
+- [Github Codespaces Deployment](#github-codespaces-deployment)
 - [Additional Notes](#additional-notes)
   - [Custom Domain](#custom-domain)
   - [Placing Behind Another Reverse-Proxy or Another Port](#placing-behind-another-reverse-proxy-or-another-port)
@@ -229,6 +230,33 @@ Then start Revolt:
 ```bash
 docker compose up -d
 ```
+
+## Github Codespaces Deployment
+
+> [!WARNING]
+> This guide is only intended for deployments for testing and development. Codespaces is NOT recommended to be used for hosting Revolt server for other users.
+
+Run these commands to set up your configuration files for Revolt Server
+
+```bash
+echo "HOSTNAME=http://local.revolt.chat" > .env.web
+echo "REVOLT_PUBLIC_URL=http://local.revolt.chat/api" >> .env.web
+wget -O Revolt.toml https://raw.githubusercontent.com/revoltchat/backend/main/crates/core/config/Revolt.toml
+```
+
+Then start Revolt:
+
+```bash
+docker compose up -d
+```
+
+If you are using VSCode for Codespaces in the browser, to view your instance, go to the ports tab, select Ports, and click on the forwarded address to open up
+fluxbox.
+
+If you are using the [Github Codespaces extention](https://code.visualstudio.com/docs/remote/codespaces) on your copy of VSCode on your local machine, the ports should forward for you automatically and you should be able to naviagte to localhost:6080 open up fluxbox.
+
+However you open up fluxbox, click the arrow button at the bottom left hand corner, select web browser, and when Firefox opens, navigate to http://local.revolt.chat to view the web client.
+
 
 ## Additional Notes
 

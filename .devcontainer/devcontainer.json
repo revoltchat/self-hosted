@@ -1,0 +1,9 @@
+{
+    "name": "RevoltChat",
+    "postCreateCommand": "bash firefox.sh",
+    "forwardPorts": [6080],
+    "features": {
+      "ghcr.io/devcontainers/features/desktop-lite:1": {}
+    }
+  }
+  
