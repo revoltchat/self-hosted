@@ -27,6 +27,9 @@ This repository contains configurations and instructions that can be used for de
 > [!NOTE]
 > amd64 builds are not currently available for the web client.
 
+> [!NOTE]
+> This guide does not include working voice channels ([#138](https://github.com/revoltchat/self-hosted/pull/138#issuecomment-2762682655)). A [rework](https://github.com/revoltchat/backend/issues/313) is currently in progress.
+
 ## Table of Contents
 - [Deployment](#deployment)
 - [Updating](#updating)
