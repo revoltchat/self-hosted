@@ -28,6 +28,7 @@ const BUCKET_MAP = {
  */
 const CONNECTION_URL = "mongodb://database";
 
+const objectLookup = {};
 const mongo = new MongoClient(CONNECTION_URL);
 await mongo.connect();
 
