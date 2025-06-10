@@ -237,12 +237,19 @@ docker compose up -d
 
 ### Custom Domain
 
-To configure a custom domain, you will need to replace *all* instances of `local.revolt.chat` in `Revolt.toml` and `.env.web` to your chosen domain (here represented as `example.com`), like so:
+To configure a custom domain, you can either generate a config for https by running:
+
+```
+chmod +x ./generate_config.sh
+./generate_config.sh your.domain
+```
+
+Or alternatively do it manually, you will need to replace *all* instances of `local.revolt.chat` in `Revolt.toml` and `.env.web` to your chosen domain (here represented as `example.com`), like so:
 
 ```diff
 # .env.web
 - REVOLT_PUBLIC_URL=http://local.revolt.chat/api
-+ REVOLT_PUBLIC_URL=http://example.com
++ REVOLT_PUBLIC_URL=http://example.com/api
 ```
 
 ```diff
@@ -262,8 +269,8 @@ You will likely also want to change the protocols to enable HTTPS:
 
 ```diff
 # .env.web
-- REVOLT_PUBLIC_URL=http://example.com
-+ REVOLT_PUBLIC_URL=https://example.com
+- REVOLT_PUBLIC_URL=http://example.com/api
++ REVOLT_PUBLIC_URL=https://example.com/api
 ```
 
 ```diff
