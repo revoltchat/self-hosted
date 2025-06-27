@@ -1,31 +1,27 @@
-name: revolt
-
 services:
   # MongoDB: Database
   database:
-    image: docker.io/mongo
+    image: mongo:6
     restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: revolt
+      MONGO_INITDB_ROOT_PASSWORD: revolt
     volumes:
       - ./data/db:/data/db
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      test: ["CMD", "mongosh", "-u", "revolt", "-p", "revolt", "--eval", "db.runCommand({ ping: 1 })"]
       interval: 10s
-      timeout: 10s
+      timeout: 30s
       retries: 5
-      start_period: 10s
+      start_period: 40s
 
-  # Redis: Event message broker & KV store
-  redis:
-    image: docker.io/eqalpha/keydb
-    restart: always
-
-  # RabbitMQ: Internal message broker
+  # RabbitMQ
   rabbit:
-    image: docker.io/rabbitmq:4
+    image: rabbitmq:4-management
     restart: always
     environment:
-      RABBITMQ_DEFAULT_USER: rabbituser
-      RABBITMQ_DEFAULT_PASS: rabbitpass
+      RABBITMQ_DEFAULT_USER: revolt
+      RABBITMQ_DEFAULT_PASS: revolt
     volumes:
       - ./data/rabbit:/var/lib/rabbitmq
     healthcheck:
@@ -35,142 +31,87 @@ services:
       retries: 3
       start_period: 20s
 
-  # MinIO: S3-compatible storage server
+  # Redis (newly added)
+  redis:
+    image: redis:7
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 30s
+      retries: 3
+      start_period: 20s
+
+  # MinIO
   minio:
-    image: docker.io/minio/minio
-    command: server /data
+    image: minio/minio
+    command: server /data --console-address ":9001"
     volumes:
       - ./data/minio:/data
     environment:
-      MINIO_ROOT_USER: minioautumn
-      MINIO_ROOT_PASSWORD: minioautumn
-      MINIO_DOMAIN: minio
-    networks:
-      default:
-        aliases:
-          - revolt-uploads.minio
-          # legacy support:
-          - attachments.minio
-          - avatars.minio
-          - backgrounds.minio
-          - icons.minio
-          - banners.minio
-          - emojis.minio
-    restart: always
+      MINIO_ROOT_USER: revolt
+      MINIO_ROOT_PASSWORD: revolt-revolt
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
 
-  # Caddy: Web server
-  caddy:
-    image: docker.io/caddy
-    restart: always
-    env_file: .env.web
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - ./data/caddy-data:/data
-      - ./data/caddy-config:/config
-
-  # API server
+  # Application services with build context
   api:
-    image: ghcr.io/revoltchat/server:20250210-1
+    build: ./api  # Add path to Dockerfile
+    env_file: .env
     depends_on:
       database:
         condition: service_healthy
-      redis:
-        condition: service_started
       rabbit:
         condition: service_healthy
-    volumes:
-      - type: bind
-        source: ./Revolt.toml
-        target: /Revolt.toml
-    restart: always
-
-  # Events service
-  events:
-    image: ghcr.io/revoltchat/bonfire:20250210-1
-    depends_on:
-      database:
-        condition: service_healthy
       redis:
-        condition: service_started
-    volumes:
-      - type: bind
-        source: ./Revolt.toml
-        target: /Revolt.toml
-    restart: always
+        condition: service_healthy  # Updated to healthy
 
-  # Web App
-  web:
-    image: ghcr.io/revoltchat/client:master
-    restart: always
-    env_file: .env.web
-
-  # File server
   autumn:
-    image: ghcr.io/revoltchat/autumn:20250210-1
-    depends_on:
-      database:
-        condition: service_healthy
-      createbuckets:
-        condition: service_started
-    volumes:
-      - type: bind
-        source: ./Revolt.toml
-        target: /Revolt.toml
-    restart: always
-
-  # Metadata and image proxy
-  january:
-    image: ghcr.io/revoltchat/january:20250210-1
-    volumes:
-      - type: bind
-        source: ./Revolt.toml
-        target: /Revolt.toml
-    restart: always
-
-  # Regular task daemon
-  crond:
-    image: ghcr.io/revoltchat/crond:20250210-1-debug
+    build: ./autumn  # Add path to Dockerfile
+    env_file: .env
     depends_on:
       database:
         condition: service_healthy
       minio:
-        condition: service_started
-    volumes:
-      - type: bind
-        source: ./Revolt.toml
-        target: /Revolt.toml
-    restart: always
+        condition: service_healthy
 
-  # Push notification daemon
+  events:
+    build: ./events  # Add path to Dockerfile
+    env_file: .env
+
+  web:
+    build: ./web  # Add path to Dockerfile
+    env_file: .env
+
+  january:
+    build: ./january  # Add path to Dockerfile
+    env_file: .env
+
+  crond:
+    build: ./crond  # Add path to Dockerfile
+    env_file: .env
+
   pushd:
-    image: ghcr.io/revoltchat/pushd:20250210-1
-    depends_on:
-      database:
-        condition: service_healthy
-      redis:
-        condition: service_started
-      rabbit:
-        condition: service_healthy
-    volumes:
-      - type: bind
-        source: ./Revolt.toml
-        target: /Revolt.toml
-    restart: always
+    build: ./pushd  # Add path to Dockerfile
+    env_file: .env
 
-  # Create buckets for minio.
+  # Create Buckets
   createbuckets:
-    image: docker.io/minio/mc
+    image: minio/mc  # Required image added
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     entrypoint: >
       /bin/sh -c "
-      while ! /usr/bin/mc ready minio; do
-        /usr/bin/mc alias set minio http://minio:9000 minioautumn minioautumn;
-        echo 'Waiting minio...' && sleep 1;
+      until /usr/bin/mc alias set minio http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD; do
+        echo 'Waiting for minio...'; sleep 5;
       done;
-      /usr/bin/mc mb minio/revolt-uploads;
+      /usr/bin/mc mb minio/revolt-uploads || true;
       exit 0;
       "
+    environment:
+      MINIO_ROOT_USER: revolt
+      MINIO_ROOT_PASSWORD: revolt-revolt
