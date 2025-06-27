@@ -1,0 +1,1 @@
+[db]url = "mongodb://revolt:revolt@database:27017/revolt?authSource=admin"[rabbitmq]host = "rabbit"port = 5672username = "revolt"password = "revolt"[redis]host = "redis"port = 6379[autumn]s3_endpoint = "http://minio:9000"s3_access_key = "revolt"s3_secret_key = "revolt-revolt"s3_bucket = "revolt-uploads"s3_region = "us-east-1"
