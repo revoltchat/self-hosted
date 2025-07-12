@@ -17,7 +17,7 @@ echo "" >> Revolt.toml
 echo "[pushd.vapid]" >> Revolt.toml
 openssl ecparam -name prime256v1 -genkey -noout -out vapid_private.pem
 echo "private_key = \"$(base64 -i vapid_private.pem | tr -d '\n' | tr -d '=')\"" >> Revolt.toml
-echo "public_key = \"$(openssl ec -in vapid_private.pem -outform DER|tail -c 65|base64|tr '/+' '_-'|tr -d '\n'|tr -d '=')\"" >> Revolt.toml
+echo "public_key = \"$(openssl ec -in vapid_private.pem -outform DER|tail --bytes 65|base64|tr '/+' '_-'|tr -d '\n'|tr -d '=')\"" >> Revolt.toml
 rm vapid_private.pem
 
 # encryption key for files
