@@ -1,0 +1,12 @@
+{
+  "name": "migrations",
+  "version": "1.0.0",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mongodb": "^6.19.0",
+    "ulid": "^3.0.1"
+  }
+}
