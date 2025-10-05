@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    revolt-helm.service: crond
+  name: crond
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      revolt-helm.service: crond
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        revolt-helm.service: crond
+    spec:
+      containers:
+        - image: ghcr.io/revoltchat/crond:{{ .Values.imageTag }}
+          name: crond
+          volumeMounts:
+            - mountPath: /Revolt.toml
+              name: crond-cm
+              subPath: Revolt.toml
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: Revolt.toml
+                path: Revolt.toml
+            name: revolt-cm
+          name: crond-cm

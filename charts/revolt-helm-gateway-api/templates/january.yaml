@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    revolt-helm.service: january
+  name: january
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      revolt-helm.service: january
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        revolt-helm.service: january
+    spec:
+      containers:
+        - image: ghcr.io/revoltchat/january:{{ .Values.imageTag }}
+          name: january
+          volumeMounts:
+            - mountPath: /Revolt.toml
+              name: january-cm
+              subPath: Revolt.toml
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: Revolt.toml
+                path: Revolt.toml
+            name: revolt-cm
+          name: january-cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    revolt-helm.service: january
+  name: january
+spec:
+  ports:
+    - name: "14705"
+      port: 14705
+      targetPort: 14705
+  selector:
+    revolt-helm.service: january
+  type: ClusterIP

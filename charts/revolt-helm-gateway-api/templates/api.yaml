@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    revolt-helm.service: api
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      revolt-helm.service: api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        revolt-helm.service: api
+    spec:
+      containers:
+        - image: ghcr.io/revoltchat/server:{{ .Values.imageTag }}
+          name: api
+          volumeMounts:
+            - mountPath: /Revolt.toml
+              name: api-cm
+              subPath: Revolt.toml
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: Revolt.toml
+                path: Revolt.toml
+            name: revolt-cm
+          name: api-cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    revolt-helm.service: api
+  name: api
+spec:
+  ports:
+    - name: "14702"
+      port: 14702
+      targetPort: 14702
+  selector:
+    revolt-helm.service: api
+  type: ClusterIP

@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    revolt-helm.service: events
+  name: events
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      revolt-helm.service: events
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        revolt-helm.service: events
+    spec:
+      containers:
+        - image: ghcr.io/revoltchat/bonfire:{{ .Values.imageTag }}
+          name: events
+          volumeMounts:
+            - mountPath: /Revolt.toml
+              name: events-cm
+              subPath: Revolt.toml
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: Revolt.toml
+                path: Revolt.toml
+            name: revolt-cm
+          name: events-cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    revolt-helm.service: events
+  name: events
+spec:
+  ports:
+    - name: "14703"
+      port: 14703
+      targetPort: 14703
+      appProtocol: kubernetes.io/ws
+  selector:
+    revolt-helm.service: events
+  type: ClusterIP

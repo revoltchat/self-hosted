@@ -1,0 +1,7 @@
+name: revolt-helm-gateway-api
+description: A Helm Chart for Revolt with Gateway API
+version: 0.0.1
+apiVersion: v2
+keywords:
+  - revolt
+  - chat

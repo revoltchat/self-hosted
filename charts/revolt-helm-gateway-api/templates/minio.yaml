@@ -1,0 +1,70 @@
+{{- if .Values.minio.enabled -}}
+{{- $hostname := .Values.minio.hostname -}}
+{{- $user := .Values.minio.user -}}
+{{- $password := .Values.minio.password -}}
+{{- $domain := .Values.minio.domain -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    revolt-helm.service: minio
+  name: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      revolt-helm.service: minio
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        revolt-helm.service: minio
+    spec:
+      containers:
+        - args:
+            - server
+            - /data
+          env:
+            - name: MINIO_DOMAIN
+              value: {{ $domain }}
+            - name: MINIO_ROOT_PASSWORD
+              value: {{ $password }}
+            - name: MINIO_ROOT_USER
+              value: {{ $user }}
+          image: docker.io/minio/minio
+          name: minio
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    revolt-helm.service: minio
+  name: minio
+spec:
+  ports:
+    - name: "9000"
+      port: 9000
+      targetPort: 9000
+  selector:
+    revolt-helm.service: minio
+  type: ClusterIP
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: createbuckets
+spec:
+  template:
+    spec:
+      containers:
+        - command:
+            - /bin/sh
+            - -c
+            - " while ! /usr/bin/mc ready {{ $domain }}; do\n  /usr/bin/mc alias set {{ $domain }} http://{{ $hostname }}:9000 {{ $user }} {{ $password }};\n  echo 'Waiting minio...' && sleep 1;\ndone; /usr/bin/mc mb {{ $domain }}/revolt-uploads; exit 0; "
+          image: docker.io/minio/mc
+          name: createbuckets
+      restartPolicy: OnFailure
+{{- end }}

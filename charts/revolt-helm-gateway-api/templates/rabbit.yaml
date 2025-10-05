@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    revolt-helm.service: rabbit
+  name: rabbit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      revolt-helm.service: rabbit
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        revolt-helm.service: rabbit
+    spec:
+      containers:
+        - env:
+            - name: RABBITMQ_DEFAULT_PASS
+              value: rabbitpass
+            - name: RABBITMQ_DEFAULT_USER
+              value: rabbituser
+          image: docker.io/rabbitmq:4
+          livenessProbe:
+            exec:
+              command:
+                - rabbitmq-diagnostics -q ping
+            failureThreshold: 3
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 10
+          name: rabbit
+          volumeMounts:
+            - name: rabbit-storage
+              mountPath: /var/lib/rabbitmq
+      restartPolicy: Always
+      volumes:
+        - name: rabbit-storage
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    revolt-helm.service: rabbit
+  name: rabbit
+spec:
+  ports:
+    - name: "5671"
+      port: 5671
+      targetPort: 5671
+    - name: "5672"
+      port: 5672
+      targetPort: 5672
+  selector:
+    revolt-helm.service: rabbit
+  type: ClusterIP

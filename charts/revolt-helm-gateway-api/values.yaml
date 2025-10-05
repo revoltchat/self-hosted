@@ -1,0 +1,38 @@
+---
+externalName: revolt.mylab.net
+pushdVapid:
+  privateKey: "xxx"
+  publicKey: "yyy"
+files:
+  encryptionKey: "zzz"
+
+imageTag: 20250730-1
+
+minio:
+  enabled: true
+  hostname: minio
+  user: minioautumn
+  password: minioautumn
+  domain: minio
+
+gatewayAPI:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: mylab.net-letsencrypt
+    external-dns.alpha.kubernetes.io/target: "x,y,z"
+  routes:
+    - path: /api
+      name: api
+      port: 14702
+    - path: /ws
+      name: events
+      port: 14703
+    - path: /autumn
+      name: autumn
+      port: 14704
+    - path: /january
+      name: january
+      port: 14705
+    - path: /
+      name: web
+      port: 5000

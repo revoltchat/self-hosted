@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    revolt-helm.service: pushd
+  name: pushd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      revolt-helm.service: pushd
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        revolt-helm.service: pushd
+    spec:
+      containers:
+        - image: ghcr.io/revoltchat/pushd:{{ .Values.imageTag }}
+          name: pushd
+          volumeMounts:
+            - mountPath: /Revolt.toml
+              name: pushd-cm
+              subPath: Revolt.toml
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: Revolt.toml
+                path: Revolt.toml
+            name: revolt-cm
+          name: pushd-cm

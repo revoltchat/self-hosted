@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  name: revolt-cm
+data:
+  Revolt.toml: |
+    [hosts]
+    app = "https://{{ .Values.externalName }}"
+    api = "https://{{ .Values.externalName }}/api"
+    events = "wss://{{ .Values.externalName }}/ws"
+    autumn = "https://{{ .Values.externalName }}/autumn"
+    january = "https://{{ .Values.externalName }}/january"
+
+    [pushd.vapid]
+    private_key = "{{ .Values.pushdVapid.privateKey }}"
+    public_key = "{{ .Values.pushdVapid.publicKey }}"
+
+    [files]
+    encryption_key = "{{ .Values.files.encryptionKey }}"

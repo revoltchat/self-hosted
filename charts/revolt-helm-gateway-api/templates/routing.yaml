@@ -1,0 +1,54 @@
+{{- if .Values.gatewayAPI.enabled -}}
+{{- $host := .Values.externalName -}}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: revolt-gw
+  {{- with .Values.gatewayAPI.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  gatewayClassName: cilium
+  listeners:
+  - hostname: {{ $host }}
+    name: revolt-gw-https
+    port: 443
+    protocol: HTTPS
+    tls:
+      certificateRefs:
+      - name: {{ $host | replace "." "-" }}-tls
+        kind: Secret
+{{- range .Values.gatewayAPI.routes }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: revolt-{{ .name }}
+spec:
+  parentRefs:
+    - name: revolt-gw
+  hostnames:
+    - {{ $host }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: {{ .path }}
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            add:
+              - name: Location
+                value: {{ .path }}
+      backendRefs:
+        - name: {{ .name }}
+          port: {{ .port }}
+{{- end }}
+{{- end }}

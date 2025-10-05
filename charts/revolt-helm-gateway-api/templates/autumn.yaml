@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    revolt-helm.service: autumn
+  name: autumn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      revolt-helm.service: autumn
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        revolt-helm.service: autumn
+    spec:
+      containers:
+        - image: ghcr.io/revoltchat/autumn:{{ .Values.imageTag }}
+          name: autumn
+          volumeMounts:
+            - mountPath: /Revolt.toml
+              name: autumn-cm
+              subPath: Revolt.toml
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: Revolt.toml
+                path: Revolt.toml
+            name: revolt-cm
+          name: autumn-cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    revolt-helm.service: autumn
+  name: autumn
+spec:
+  ports:
+    - name: "14704"
+      port: 14704
+      targetPort: 14704
+  selector:
+    revolt-helm.service: autumn
+  type: ClusterIP
