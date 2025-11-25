@@ -5,7 +5,7 @@ echo "HOSTNAME=https://$1" > .env.web
 echo "REVOLT_PUBLIC_URL=https://$1/api" >> .env.web
 
 # hostnames
-echo "[hosts]" >> Revolt.toml
+echo "[hosts]" > Revolt.toml
 echo "app = \"https://$1\"" >> Revolt.toml
 echo "api = \"https://$1/api\"" >> Revolt.toml
 echo "events = \"wss://$1/ws\"" >> Revolt.toml
